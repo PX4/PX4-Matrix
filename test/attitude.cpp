@@ -134,7 +134,7 @@ int main()
     assert(q_prod_check == q_check);
 
     // quaternion inverse
-    Quatf q = q_check.inversed():
+    q = q_check.inversed();
     assert(fabsf(q_check(0) - q(0)) < eps);
     assert(fabsf(q_check(1) + q(1)) < eps);
     assert(fabsf(q_check(2) + q(2)) < eps);

@@ -139,15 +139,15 @@ public:
         return ret;
     }
 
-    void rotate(const Vector<float, 3> &v) {
-        Quaternion<float> r;
+    void rotate(const Vector<Type, 3> &v) {
+        Quaternion r;
         r.from_axis_angle(v);
         (*this) = (*this) * r;
     }
 
-    void from_axis_angle(Vector<float, 3> v) {
-        Quaternion<float> &q = *this;
-        float theta = v.norm();
+    void from_axis_angle(Vector<Type, 3> v) {
+        Quaternion &q = *this;
+        Type theta = v.norm();
         if(theta < 1.0e-12f) {
             q(0) = 1.0f;
             q(1)=q(2)=q(3)=0.0f;
@@ -157,13 +157,13 @@ public:
         from_axis_angle(v,theta);
     }
 
-    void from_axis_angle(const Vector<float, 3> &axis, float theta) {
-        Quaternion<float> &q = *this;
+    void from_axis_angle(const Vector<Type, 3> &axis, Type theta) {
+        Quaternion &q = *this;
         if(theta < 1.0e-12f) {
             q(0) = 1.0f;
             q(1)=q(2)=q(3)=0.0f;
         }
-        float st2 = sinf(theta/2.0f);
+        Type st2 = sinf(theta/2.0f);
 
         q(0) = cosf(theta/2.0f);
         q(1) = axis(0) * st2;
@@ -173,7 +173,7 @@ public:
 
     Vector<Type, 3> to_axis_angle() {
         Quaternion &q = *this;
-        float l = sqrt(q(1) * q(1) + q(2) * q(2) + q(3) * q(3));
+        Type l = Type(sqrt(q(1) * q(1) + q(2) * q(2) + q(3) * q(3)));
         Vector<Type, 3> v;
         v(0) = q(1);
         v(1) = q(2);
