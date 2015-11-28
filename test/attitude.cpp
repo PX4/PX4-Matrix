@@ -133,6 +133,13 @@ int main()
     q_check *= q_check;
     assert(q_prod_check == q_check);
 
+    // quaternion inverse
+    Quatf q = q_check.inversed():
+    assert(fabsf(q_check(0) - q(0)) < eps);
+    assert(fabsf(q_check(1) + q(1)) < eps);
+    assert(fabsf(q_check(2) + q(2)) < eps);
+    assert(fabsf(q_check(3) + q(3)) < eps);
+
 };
 
 /* vim: set et fenc=utf-8 ff=unix sts=0 sw=4 ts=4 : */

@@ -9,6 +9,7 @@
 #pragma once
 
 #include "math.hpp"
+#include "helper_functions.hpp"
 
 namespace matrix
 {
@@ -119,6 +120,88 @@ public:
         v(2) = w(1,0);
         v(3) = w(2,0);
         return Q * v * Type(0.5);
+    }
+
+    void invert() {
+        Quaternion &q = *this;
+        q(1) *= -1;
+        q(2) *= -1;
+        q(3) *= -1;
+    }
+
+    Quaternion inversed() {
+        Quaternion &q = *this;
+        Quaternion ret;
+        ret(0) = q(0);
+        ret(1) = q(1);
+        ret(2) = q(2);
+        ret(3) = q(3);
+        return ret;
+    }
+
+    void rotate(const Vector<float, 3> &v) {
+        Quaternion<float> r;
+        r.from_axis_angle(v);
+        (*this) = (*this) * r;
+    }
+
+    void from_axis_angle(Vector<float, 3> v) {
+        Quaternion<float> &q = *this;
+        float theta = v.norm();
+        if(theta < 1.0e-12f) {
+            q(0) = 1.0f;
+            q(1)=q(2)=q(3)=0.0f;
+            return;
+        }
+        v /= theta;
+        from_axis_angle(v,theta);
+    }
+
+    void from_axis_angle(const Vector<float, 3> &axis, float theta) {
+        Quaternion<float> &q = *this;
+        if(theta < 1.0e-12f) {
+            q(0) = 1.0f;
+            q(1)=q(2)=q(3)=0.0f;
+        }
+        float st2 = sinf(theta/2.0f);
+
+        q(0) = cosf(theta/2.0f);
+        q(1) = axis(0) * st2;
+        q(2) = axis(1) * st2;
+        q(3) = axis(2) * st2;
+    }
+
+    Vector<Type, 3> to_axis_angle() {
+        Quaternion &q = *this;
+        float l = sqrt(q(1) * q(1) + q(2) * q(2) + q(3) * q(3));
+        Vector<Type, 3> v;
+        v(0) = q(1);
+        v(1) = q(2);
+        v(2) = q(3);
+        if(l >= (Type)1.0e-12) {
+            v /= l;
+            v *= wrap_pi((Type)2.0 * atan2f(l,q(0)));
+        }
+        return v;
+    }
+
+    Matrix<Type, 3, 3> to_dcm() {
+        Quaternion &q = *this;
+        Matrix<Type, 3, 3> R;
+        Type aSq = q(0) * q(0);
+        Type bSq = q(1) * q(1);
+        Type cSq = q(2) * q(2);
+        Type dSq = q(3) * q(3);
+        R._data[0][0] = aSq + bSq - cSq - dSq;
+        R._data[0][1] = (Type)2.0 * (q(1) * q(2) - q(0) * q(3));
+        R._data[0][2] = (Type)2.0 * (q(0) * q(2) + q(1) * q(3));
+        R._data[1][0] = (Type)2.0 * (q(1) * q(2) + q(0) * q(3));
+        R._data[1][1] = aSq - bSq + cSq - dSq;
+        R._data[1][2] = (Type)2.0 * (q(2) * q(3) - q(0) * q(1));
+        R._data[2][0] = (Type)2.0 * (q(1) * q(3) - q(0) * q(2));
+        R._data[2][1] = (Type)2.0 * (q(0) * q(1) + q(2) * q(3));
+        R._data[2][2] = aSq - bSq - cSq + dSq;
+        return R;
     }
 };
 
