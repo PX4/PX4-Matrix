@@ -1,5 +1,8 @@
 #pragma once
 
+#ifdef __hexagon__
+#include "dspal_math.h"
+#endif
 #include "Matrix.hpp"
 #include "SquareMatrix.hpp"
 #include "Vector.hpp"
