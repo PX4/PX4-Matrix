@@ -61,6 +61,17 @@ public:
         return res;
     }
 
+    Type trace() const
+    {
+        Type res = 0;
+        const SquareMatrix<Type, M> &self = *this;
+
+        for (size_t i = 0; i < M; i++) {
+            res += self(i, i);
+        }
+        return res;
+    }
+
 };
 
 typedef SquareMatrix<float, 3> SquareMatrix3f;
