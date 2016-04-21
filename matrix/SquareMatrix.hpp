@@ -226,7 +226,7 @@ SquareMatrix <Type, M> inv(const SquareMatrix<Type, M> & A)
     return X;
 }
 
-
+typedef SquareMatrix<float, 3> Matrix3f;
 
 } // namespace matrix
 
