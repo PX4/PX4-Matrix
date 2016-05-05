@@ -22,7 +22,8 @@ class Quaternion;
 /**
  * Euler angles class
  *
- * More elaborate class description
+ * This class describes the transformation from the body fixed frame
+ * to the inertial frame via 3-2-1 tait brian euler angles.
  */
 template<typename Type>
 class Euler : public Vector<Type, 3>
@@ -32,8 +33,6 @@ public:
 
     /**
      * Standard constructor
-     *
-     * More elaborate function description
      */
     Euler() : Vector<Type, 3>()
     {
@@ -41,8 +40,6 @@ public:
 
     /**
      * Copy constructor
-     *
-     * More elaborate function description
      *
      * @param other vector to copy
      */
@@ -54,8 +51,6 @@ public:
     /**
      * Constructor from Matrix31
      *
-     * More elaborate function description
-     *
      * @param other Matrix31 to copy
      */
     Euler(const Matrix<Type, 3, 1> & other) :
@@ -66,7 +61,8 @@ public:
     /**
      * Constructor from euler angles
      *
-     * More elaborate function description
+     * Instance is initialized from angle tripplet (3,2,1)
+     * representing transformation from body frame to inertial frame. 
      *
      * @param phi_   roll
      * @param theta_ pitch
@@ -80,7 +76,8 @@ public:
     /**
      * Constructor from dcm
      *
-     * More elaborate function description
+     * Instance is initialized from dcm representing transformation
+     * from body frame to inertial frame.
      *
      * @param dcm_ dcm to set angles to
      */
@@ -92,7 +89,8 @@ public:
     /**
      * Constructor from quaternion
      *
-     * More elaborate function description
+     * Instance is initialized from quaternion representing
+     * transformation from body frame to inertial frame.
      *
      * @param q quaternion to set angles to
      */
@@ -105,7 +103,8 @@ public:
     /**
      * Set from euler angles
      *
-     * More elaborate function description
+     * Instance is set from angle tripplet (3,2,1) representing
+     * transformation from body frame to inertial frame. 
      *
      * @param phi_   roll
      * @param theta_ pitch
@@ -121,7 +120,8 @@ public:
     /**
      * Set from dcm
      *
-     * More elaborate function description
+     * Instance is set from dcm representing transformation
+     * from body frame to inertial frame.
      *
      * @param dcm_ dcm to set angles to
      */
@@ -148,7 +148,8 @@ public:
     /**
      * Set from dcm
      *
-     * More elaborate function description
+     * Instance is set from quaternion representing
+     * transformation from body frame to inertial frame.
      *
      * @param q quaternion to set angles to
      */
