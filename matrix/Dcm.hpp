@@ -20,6 +20,12 @@ class Quaternion;
 template<typename Type>
 class Euler;
 
+/**
+ * Direction cosine matrix class
+ *
+ * The rotation between two coordinate frames is
+ * described by this class.
+ */
 template<typename Type>
 class Dcm : public Matrix<Type, 3, 3>
 {
@@ -28,20 +34,68 @@ public:
 
     typedef Matrix<Type, 3, 1> Vector3;
 
+    /**
+     * Standard constructor
+     *
+     * Initializes to identity
+     */
     Dcm() : Matrix<Type, 3, 3>()
     {
         (*this) = eye<Type, 3>();
     }
 
+    /**
+     * Constructor from array
+     *
+     * @param other array
+     */
     Dcm(const Type *data_) : Matrix<Type, 3, 3>(data_)
     {
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param other Matrix33 to set dcm to
+     */
     Dcm(const Matrix<Type, 3, 3> &other) : Matrix<Type, 3, 3>(other)
     {
     }
 
+    /**
+     * Constructor from quaternion
+     *
+     * Instance is initialized from quaternion representing
+     * transformation from inertial frame to body frame.
+     *
+     * @param q quaternion to set dcm to
+     */
     Dcm(const Quaternion<Type> & q) {
+        set_from_quaternion(q);
+    }
+
+    /**
+     * Constructor from euler angles
+     *
+     * Instance is initialized from angle tripplet (3,2,1) representing
+     * transformation from body frame to inertial frame. 
+     *
+     * @param euler euler angles to set dcm to
+     */
+    Dcm(const Euler<Type> & euler) {
+        set_from_euler(euler);
+    }
+
+
+    /**
+     * Set from quaternion
+     *
+     * Instance is set from quaternion representing
+     * transformation from inertial frame to body frame.
+     *
+     * @param q quaternion to set dcm to
+     */
+    void set_from_quaternion(const Quaternion<Type> & q) {
         Dcm &dcm = *this;
         Type a = q(0);
         Type b = q(1);
@@ -62,7 +116,15 @@ public:
         dcm(2, 2) = aSq - bSq - cSq + dSq;
     }
 
-    Dcm(const Euler<Type> & euler) {
+    /**
+     * Set from euler angles
+     *
+     * Instance is set from angle tripplet (3,2,1) representing
+     * transformation from body frame to inertial frame. 
+     *
+     * @param euler euler angles to set dcm to
+     */
+    void set_from_euler(const Euler<Type> & euler) {
         Dcm &dcm = *this;
         Type cosPhi = Type(cos(euler.phi()));
         Type sinPhi = Type(sin(euler.phi()));

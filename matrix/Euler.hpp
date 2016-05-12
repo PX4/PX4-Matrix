@@ -23,34 +23,113 @@ class Dcm;
 template <typename Type>
 class Quaternion;
 
+/**
+ * Euler angles class
+ *
+ * This class describes the transformation from the body fixed frame
+ * to the inertial frame via 3-2-1 tait brian euler angles.
+ */
 template<typename Type>
 class Euler : public Vector<Type, 3>
 {
 public:
     virtual ~Euler() {};
 
+    /**
+     * Standard constructor
+     */
     Euler() : Vector<Type, 3>()
     {
     }
 
+    /**
+     * Copy constructor
+     *
+     * @param other vector to copy
+     */
     Euler(const Vector<Type, 3> & other) :
         Vector<Type, 3>(other)
     {
     }
 
+    /**
+     * Constructor from Matrix31
+     *
+     * @param other Matrix31 to copy
+     */
     Euler(const Matrix<Type, 3, 1> & other) :
         Vector<Type, 3>(other)
     {
     }
 
+    /**
+     * Constructor from euler angles
+     *
+     * Instance is initialized from angle tripplet (3,2,1)
+     * representing transformation from body frame to inertial frame. 
+     *
+     * @param phi_   roll
+     * @param theta_ pitch
+     * @param psi_   yaw
+     */
     Euler(Type phi_, Type theta_, Type psi_) : Vector<Type, 3>()
+    {
+        set_from_euler(phi_, theta_, psi_);
+    }
+
+    /**
+     * Constructor from dcm
+     *
+     * Instance is initialized from dcm representing transformation
+     * from body frame to inertial frame.
+     *
+     * @param dcm_ dcm to set angles to
+     */
+    Euler(const Dcm<Type> & dcm) : Vector<Type, 3>()
+    {
+        set_from_dcm(dcm);
+    }
+
+    /**
+     * Constructor from quaternion
+     *
+     * Instance is initialized from quaternion representing
+     * transformation from body frame to inertial frame.
+     *
+     * @param q quaternion to set angles to
+     */
+    Euler(const Quaternion<Type> & q) :
+        Vector<Type, 3>()
+    {
+        set_from_quaternion(q);
+    }
+
+    /**
+     * Set from euler angles
+     *
+     * Instance is set from angle tripplet (3,2,1) representing
+     * transformation from body frame to inertial frame. 
+     *
+     * @param phi_   roll
+     * @param theta_ pitch
+     * @param psi_   yaw
+     */
+    void set_from_euler(Type phi_, Type theta_, Type psi_)
     {
         phi() = phi_;
         theta() = theta_;
         psi() = psi_;
     }
 
-    Euler(const Dcm<Type> & dcm) : Vector<Type, 3>()
+    /**
+     * Set from dcm
+     *
+     * Instance is set from dcm representing transformation
+     * from body frame to inertial frame.
+     *
+     * @param dcm_ dcm to set angles to
+     */
+    void set_from_dcm(const Dcm<Type> & dcm)
     {
         Type phi_val = Type(atan2(dcm(2,1), dcm(2,2)));
         Type theta_val = Type(asin(-dcm(2,0)));
@@ -70,8 +149,15 @@ public:
         psi() = psi_val;
     }
 
-    Euler(const Quaternion<Type> & q) :
-        Vector<Type, 3>()
+    /**
+     * Set from dcm
+     *
+     * Instance is set from quaternion representing
+     * transformation from body frame to inertial frame.
+     *
+     * @param q quaternion to set angles to
+     */
+    void set_from_quaternion(const Quaternion<Type> & q)
     {
         *this = Euler(Dcm<Type>(q));
     }
