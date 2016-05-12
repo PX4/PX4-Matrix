@@ -4,7 +4,7 @@
  * All rotations and axis systems follow the right-hand rule
  *
  * An instance of this class defines a rotation from coordinate frame 1 to coordinate frame 2.
- * It follows the convention of an intrinsic tait-bryan 3-2-1 sequence.
+ * It follows the convention of a 3-2-1 intrinsic Tait-Bryan rotation sequence.
  * In order to go from frame 1 to frame 2 we apply the following rotations consecutively.
  * 1) We rotate about our initial Z axis by an angle of _psi.
  * 2) We rotate about the newly created Y' axis by an angle of _theta.
@@ -29,8 +29,8 @@ class Quaternion;
 /**
  * Euler angles class
  *
- * This class describes the transformation from the body fixed frame
- * to the inertial frame via 3-2-1 tait brian euler angles.
+ * This class describes the rotation from frame 1
+ * to frame 2 via 3-2-1 intrinsic Tait-Bryan rotation sequence.
  */
 template<typename Type>
 class Euler : public Vector<Type, 3>
@@ -68,8 +68,9 @@ public:
     /**
      * Constructor from euler angles
      *
-     * Instance is initialized from angle tripplet (3,2,1)
-     * representing transformation from body frame to inertial frame. 
+     * Instance is initialized from an 3-2-1 intrinsic Tait-Bryan
+     * rotation sequence representing transformation from frame 1
+     * to frame 2. 
      *
      * @param phi_ rotation angle about X axis
      * @param theta_ rotation angle about Y axis
@@ -83,10 +84,10 @@ public:
     /**
      * Constructor from DCM matrix
      *
-     * Instance is set from Dcm representing
-     * transformation from frame 2 to frame 1.
-     * This instance will hold the angles defining the rotation
-     * from frame 1 to frame 2.
+     * Instance is set from Dcm representing transformation from
+     * frame 2 to frame 1.
+     * This instance will hold the angles defining the 3-2-1 intrinsic
+     * Tait-Bryan rotation sequence from frame 1 to frame 2.
      *
      * @param dcm Direction cosine matrix
     */
@@ -98,10 +99,10 @@ public:
     /**
      * Constructor from quaternion instance.
      *
-     * Instance is set from a quaternion representing
-     * transformation from frame 2 to frame 1.
-     * This instance will hold the angles defining the rotation
-     * from frame 1 to frame 2.
+     * Instance is set from a quaternion representing transformation
+     * from frame 2 to frame 1.
+     * This instance will hold the angles defining the 3-2-1 intrinsic
+     * Tait-Bryan rotation sequence from frame 1 to frame 2.
      *
      * @param q quaternion
     */
@@ -114,12 +115,12 @@ public:
     /**
      * Set from euler angles
      *
-     * Instance is set from angle tripplet (3,2,1) representing
-     * rotation from frame 1 to frame 2.
+     * Instance is set from an 3-2-1 intrinsic Tait-Bryan rotation
+     * sequence representing transformation from frame 1 to frame 2.  
      *
-     * @param phi_   roll
-     * @param theta_ pitch
-     * @param psi_   yaw
+     * @param phi_ rotation angle about X axis
+     * @param theta_ rotation angle about Y axis
+     * @param psi_ rotation angle about Z axis
      */
     void set_from_euler(Type phi_, Type theta_, Type psi_)
     {
@@ -129,12 +130,14 @@ public:
     }
 
     /**
-     * Set from dcm
+     * Set from DCM matrix
      *
-     * Instance is set from dcm representing transformation
-     * from frame 2 to frame 1.
+     * Instance is set from Dcm representing transformation from
+     * frame 2 to frame 1.
+     * This instance will hold the angles defining the 3-2-1 intrinsic
+     * Tait-Bryan rotation sequence from frame 1 to frame 2.
      *
-     * @param dcm Direction cosine matrix instance to convert from.
+     * @param dcm Direction cosine matrix
      */
     void set_from_dcm(const Dcm<Type> & dcm)
     {
@@ -157,12 +160,14 @@ public:
     }
 
     /**
-     * Set from dcm
+     * Set from quaternion instance.
      *
-     * Instance is set from quaternion representing
-     * transformation from body frame to inertial frame.
+     * Instance is set from a quaternion representing transformation
+     * from frame 2 to frame 1.
+     * This instance will hold the angles defining the 3-2-1 intrinsic
+     * Tait-Bryan rotation sequence from frame 1 to frame 2.
      *
-     * @param q quaternion to set angles to
+     * @param q quaternion
      */
     void set_from_quaternion(const Quaternion<Type> & q)
     {
