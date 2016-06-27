@@ -104,10 +104,10 @@ public:
         Type psi_val = Type(atan2(dcm(1,0), dcm(0,0)));
         Type pi = Type(M_PI);
 
-        if (fabs(theta_val - pi/2) < 1.0e-3) {
+        if (Type(fabs(theta_val - pi/Type(2))) < Type(1.0e-3)) {
             phi_val = Type(0.0);
             psi_val = Type(atan2(dcm(1,2), dcm(0,2)));
-        } else if (Type(fabs(theta_val + pi/2)) < Type(1.0e-3)) {
+        } else if (Type(fabs(theta_val + pi/Type(2))) < Type(1.0e-3)) {
             phi_val = Type(0.0);
             psi_val = Type(atan2(-dcm(1,2), -dcm(0,2)));
         }
