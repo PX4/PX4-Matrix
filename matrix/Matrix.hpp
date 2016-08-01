@@ -26,6 +26,9 @@ namespace matrix
 template <typename Type, size_t M>
 class Vector;
 
+template <typename Type, size_t M>
+class SquareMatrix;
+
 template<typename Type, size_t  M, size_t N>
 class Matrix
 {
@@ -105,6 +108,10 @@ public:
 
         return res;
     }
+
+	inline Matrix<Type, M, N> inversed() const {
+		return SquareMatrix<Type, M>(*this).I(); 
+	}
 
     Matrix<Type, M, N> emult(const Matrix<Type, M, N> &other) const
     {
