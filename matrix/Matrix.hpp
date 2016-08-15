@@ -452,7 +452,19 @@ public:
         }
         return min_val;
     }
-
+	
+	Matrix<Type, M, N> limited(const Matrix<Type, M, N> &_min, const Matrix<Type, M, N> &_max){
+		Matrix<Type, M, N> res; 
+		for (size_t i=0; i<M; i++) {
+            for (size_t j=0; j<N; j++) {
+				float r = (*this)(i, j); 
+				if(r < _min(i, j)) r = _min(i, j); 
+				if(r > _max(i, j)) r = _max(i, j); 
+				res(i, j) = r; 
+            }
+        }
+		return res; 
+	}
 };
 
 template<typename Type, size_t M, size_t N>
