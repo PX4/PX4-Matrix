@@ -34,6 +34,9 @@ template <typename Type>
 class AxisAngle;
 
 
+template<typename Type>
+Quaternion<Type> normalize(const Quaternion<Type> &o); 
+
 /**
  * Quaternion class
  *
@@ -267,7 +270,7 @@ public:
     */
     void applyRates(const Matrix31 &w, float dt) {
         *this = *this + derivative(w) * dt;
-        normalize(*this);
+        matrix::normalize(*this);
     }
 
     /**
