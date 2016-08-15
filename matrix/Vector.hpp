@@ -61,6 +61,10 @@ public:
         return r;
     }
 
+    Type length() const {
+		return norm(); 
+    }
+
     Type norm() const {
         const Vector &a(*this);
         return Type(sqrt(a.dot(a)));
@@ -69,6 +73,10 @@ public:
     inline void normalize() {
         (*this) /= norm();
     }
+	
+	inline Vector normalized() const { 
+		return (*this) / norm(); 
+	}
 
     Vector unit() const {
         return (*this) / norm();
