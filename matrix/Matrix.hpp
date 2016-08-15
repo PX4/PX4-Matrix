@@ -500,6 +500,11 @@ bool isEqual(const Matrix<Type, M, N> &x,
     return x == y;
 }
 
+template<typename Type, size_t M>
+inline Matrix<Type, M, M> inversed(Matrix<Type, M, M> const &m) {
+	return SquareMatrix<Type, M>(m).I(); 
+}
+
 #if defined(SUPPORT_STDIOSTREAM)
 template<typename Type, size_t  M, size_t N>
 std::ostream& operator<<(std::ostream& os,
