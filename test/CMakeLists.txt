@@ -14,6 +14,7 @@ set(tests
 	filter
 	integration
 	squareMatrix
+	quaternion
 	helper
 	hatvee
 	)
