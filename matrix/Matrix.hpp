@@ -352,11 +352,29 @@ public:
         }
     }
 
-    void setRow(size_t i, const Matrix<Type, N, 1> &row)
+	Matrix<Type, 1, N> getRow(size_t i){
+        Matrix<Type, M, N> &self = *this;
+		Matrix<Type, 1, N> res; 
+		for(size_t c = 0; c < N; c++){
+			res(0, c) = self(i, c); 
+		}
+		return res; 
+	}
+	
+	Matrix<Type, M, 1> getCol(size_t j){
+        Matrix<Type, M, N> &self = *this;
+		Matrix<Type, M, 1> res; 
+		for(size_t c = 0; c < M; c++){
+			res(c, 0) = self(c, j); 
+		}
+		return res; 
+	}
+
+    void setRow(size_t i, const Matrix<Type, 1, N> &row)
     {
         Matrix<Type, M, N> &self = *this;
         for (size_t j = 0; j < N; j++) {
-            self(i, j) = row(j, 0);
+            self(i, j) = row(0, j);
         }
     }
 
