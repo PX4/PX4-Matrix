@@ -123,10 +123,6 @@ public:
         return res;
     }
 
-	inline Matrix<Type, M, N> inversed() const {
-		return SquareMatrix<Type, M>(*this).I(); 
-	}
-
     Matrix<Type, M, N> emult(const Matrix<Type, M, N> &other) const
     {
         Matrix<Type, M, N> res;
