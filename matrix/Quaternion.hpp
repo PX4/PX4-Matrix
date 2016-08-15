@@ -179,6 +179,10 @@ public:
         q(3) = d;
     }
 
+	Quaternion(const Vector<Type, 3> &axis, Type angle){
+		from_axis_angle(axis, angle); 
+	}
+
     /**
      * Quaternion multiplication operator
      *
@@ -196,12 +200,17 @@ public:
         return r;
     }
 
+	Quaternion operator+(const Quaternion &o) const {
+		const Quaternion &p = *this; 
+		return Quaternion(p(0) + o(0), p(1) + o(1), p(2) + o(2), p(3) + o(3)); 
+	}
+
     /**
      * Self-multiplication operator
      *
      * @param other quaternion to multiply with
      */
-    void operator*=(const Quaternion &other)
+    void operator*=(const Quaternion & other)
     {
         Quaternion &self = *this;
         self = self * other;
@@ -213,10 +222,10 @@ public:
      * @param scalar scalar to multiply with
      * @return product
      */
-    Quaternion operator*(Type scalar) const
+    Quaternion operator*(Type s) const
     {
         const Quaternion &q = *this;
-        return scalar * q;
+        return Quaternion(q(0) * s, q(1) * s, q(2) * s, q(3) * s);
     }
 
     /**
@@ -253,24 +262,35 @@ public:
         return Q * v * Type(0.5);
     }
 
-    /**
+	/**
+	* Apply an angular velocity vector to this quaternion and normalize result
+	*/
+	void applyRates(const Matrix31 &w, float dt){
+		*this = *this + derivative(w) * dt;
+		normalize(*this); 
+	}
+
+	/**
      * Invert quaternion
      */
-    void invert()
-    {
+    void invert() {
         Quaternion &q = *this;
         q(1) *= -1;
         q(2) *= -1;
         q(3) *= -1;
     }
 
+	Type dot(const Quaternion<Type> &o) const {
+		const Quaternion &p = *this; 
+		return p(0) * o(0) + p(1) * o(1) + p(2) * o(2) + p(3) * o(3); 
+	}
+
     /**
      * Invert quaternion
      *
      * @return inverted quaternion
      */
-    Quaternion inversed()
-    {
+    Quaternion inversed() {
         Quaternion &q = *this;
         Quaternion ret;
         ret(0) = q(0);
@@ -372,6 +392,49 @@ public:
 
 typedef Quaternion<float> Quatf;
 typedef Quaternion<float> Quaternionf;
+ 
+// set this quaternion to the result of the linear interpolation between two quaternions
+template<typename Type>
+Quaternion<Type> lerp(const Quaternion<Type> &q1, const Quaternion<Type> &q2, Type time)
+{     
+	const Type scale = 1.0f - time;      
+	return (q1*scale) + (q2*time); 
+}     
+	  
+	  
+// set this quaternion to the result of the interpolation between two quaternions
+template<typename Type>
+Quaternion<Type> slerp(const Quaternion<Type> &_q1, const Quaternion<Type> &q2, float time, float threshold){ 
+	Quaternion<Type> q1 = _q1;  
+	Type angle = q1.dot(q2);      
+	// make sure we use the short rotation   
+	if (angle < 0.0f)
+	{ 
+		q1 *= -1.0f;
+		angle *= -1.0f;                 
+	} 
+	  
+	// spherical interpolation
+	if (angle <= (1-threshold)){
+		const Type theta = acosf(angle); 
+		const Type invsintheta = 1.0f / sinf(theta); //reciprocal(sinf(theta));
+		const Type scale = sinf(theta * (1.0f-time)) * invsintheta; 
+		const Type invscale = sinf(theta * time) * invsintheta;
+		return (q1*scale) + (q2*invscale);
+	} else // linear interploation        
+		return lerp(q1,q2,time);        
+}     
+
+// for scalar * quaternion cases
+template<typename Type>
+Quaternion<Type> operator*(const Type s, const Quaternion<Type> &q){
+	return q.operator*(s); 
+}
+
+template<typename Type>
+Quaternion<Type> normalize(const Quaternion<Type> &o){
+	return o.normalized(); 
+}
 
 } // namespace matrix
 
