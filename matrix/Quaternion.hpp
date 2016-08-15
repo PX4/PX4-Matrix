@@ -35,7 +35,7 @@ class AxisAngle;
 
 
 template<typename Type>
-Quaternion<Type> normalize(const Quaternion<Type> &o); 
+Quaternion<Type> normalize(const Quaternion<Type> &o);
 
 /**
  * Quaternion class
