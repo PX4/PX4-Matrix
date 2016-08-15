@@ -46,6 +46,7 @@ int main() {
         for(size_t c = 0; c < it; c++) {
             qq.applyRates(w, 1.0f / it);
         }
+
         Vector3f v(1, 0, 0);
         Vector3f r = qq * v;
         // q should now be about the same as q90y
@@ -56,13 +57,18 @@ int main() {
         size_t it = 100;
         Vector3f w(0, M_PI / 2.0f, 0);
         Quaternion<float> qq = q90x;
-        for(size_t c = 0; c < it; c++) {
-            qq.applyRates(w, 1.0f / it);
+        for(size_t j = 0; j < 5; j++) {
+            // lets rotate it one full circle and then 90 degrees
+            for(size_t c = 0; c < it; c++) {
+                qq.applyRates(w, 1.0f / it);
+            }
         }
+        qq.normalize();
+
         Vector3f v(0, 1, 0);
         Vector3f r = qq * v;
         // q should now represent rotation of 90 degrees around x and then 90 degrees around y (in the frame of q90x). So resulting vector points down along positive z.
-        TEST(is_equal(r(0), 0.0f, 0.01f) && is_equal(r(1), 0.0f, 0.01f) && is_equal(r(2), 1.0f, 0.01f));
+        TEST(is_equal(r(0), 0.0f, 0.001f) && is_equal(r(1), 0.0f, 0.001f) && is_equal(r(2), 1.0f, 0.001f));
     }
 
     {
@@ -72,6 +78,7 @@ int main() {
         for(size_t c = 0; c < it; c++) {
             qq.applyRates(w, 1.0f / it);
         }
+
         Vector3f vx(0, 0, 1);
         Vector3f rx = qq * vx;
         // vector should now point along negative y axis (above first applies rotations of 90 around y and then 90 around x).

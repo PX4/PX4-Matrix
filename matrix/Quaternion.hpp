@@ -269,8 +269,14 @@ public:
     * Apply an angular velocity vector to this quaternion and normalize result
     */
     void applyRates(const Matrix31 &w, float dt) {
-        *this = *this + derivative(w) * dt;
-        matrix::normalize(*this);
+        Quaternion<Type> &p = *this;
+        p = p + derivative(w) * dt;
+
+        // automatically normalize if error is larger than some constant (normalize before use for best result)
+        // NOTE: if normalization is done always then it creates horrible precision because of floating point roundoffs
+        if(fabs(p.dot(p) - 1.0f) > 0.005) {
+            p.normalize();
+        }
     }
 
     /**
