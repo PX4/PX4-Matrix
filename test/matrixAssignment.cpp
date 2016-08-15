@@ -1,5 +1,6 @@
 #include "../matrix/math.hpp"
 #include "test_macros.hpp"
+#include <cfloat>
 
 using namespace matrix;
 
@@ -53,10 +54,10 @@ int main()
         1, 2, 3,
     };
 
-    float data_col_02_swap[9] = {
-        3, 2, 1,
-        6, 5, 4,
-        9, 8, 7
+    float data_col_02_swap[3][3] = {
+        { 3, 2, 1 },
+        { 6, 5, 4 },
+        { 9, 8, 7 }
     };
 
     Matrix3f m4(data);
@@ -100,15 +101,38 @@ int main()
     TEST(fabs(m5(0,0) - s) < 1e-5);
 
     Matrix<float, 2, 2> m6;
-    m6.setRow(0, Vector2f(1, 2).transposed());
+    Matrix<float, 1, 2> vr = Vector2f(1, 2).transposed();
+    m6.setRow(0, vr.getRow(0));
     float m7_array[] = {1,2,0,0};
     Matrix<float, 2, 2> m7(m7_array);
     TEST(isEqual(m6, m7));
-    m6.setCol(0, Vector2f(3, 4));
+    Vector2f vv(3, 4);
+    m6.setCol(0, vv.getCol(0));
     float m8_array[] = {3,2,4,0};
     Matrix<float, 2, 2> m8(m8_array);
     TEST(isEqual(m6, m8));
 
+#define is_equal(a, b) (fabs(a - b) < FLT_EPSILON)
+    // limits
+    {
+        Matrix<float, 2, 2> mm((const float[2][2]) {
+            { 2, -2 },
+            { -3, 0.25f }
+        });
+        Matrix<float, 2, 2> mn((const float[2][2]) {
+            { -0.5, -0.5 },
+            { -0.5, -0.5 }
+        });
+        Matrix<float, 2, 2> mx((const float[2][2]) {
+            { 0.5, 0.5 },
+            { 0.5, 0.5 }
+        });
+        mm = mm.limited(mn, mx);
+        TEST(is_equal(mm(0, 0), 0.5f));
+        TEST(is_equal(mm(0, 1), -0.5f));
+        TEST(is_equal(mm(1, 0), -0.5f));
+        TEST(is_equal(mm(1, 1), 0.25f));
+    }
     return 0;
 }
 

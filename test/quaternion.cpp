@@ -12,6 +12,11 @@ template class Vector<float, 5>;
 inline float radians(float deg) {
     return M_PI / 180.0f * deg;
 }
+
+inline float degrees(float rad) {
+    return rad / (M_PI / 180.0f);
+}
+
 inline bool is_equal(float a, float b, float e) {
     return fabsf(a - b) < e;
 }
@@ -21,7 +26,8 @@ inline bool is_equal(float a, float b) {
 
 int main() {
     Quaternion<float> q90x(cos(radians(90.0f/2.0f)), sin(radians(90.0f/2.0f)), 0, 0);
-    Quaternion<float> q90y(cos(radians(90.0f/2.0f)), 0, sin(radians(90.0f/2.0f)), 0);
+    //Quaternion<float> q90y(cos(radians(90.0f/2.0f)), 0, sin(radians(90.0f/2.0f)), 0);
+    Quaternion<float> q90y(Vector3f(0, 1, 0), radians(90.0f));
     Quaternion<float> q90z(cos(radians(90.0f/2.0f)), 0, 0, sin(radians(90.0f/2.0f)));
 
     // all positive rotations are clockwise
@@ -83,6 +89,18 @@ int main() {
         Vector3f rx = qq * vx;
         // vector should now point along negative y axis (above first applies rotations of 90 around y and then 90 around x).
         TEST(is_equal(rx(0), 0.0f, 0.01f) && is_equal(rx(1), -1.0f, 0.01f) && is_equal(rx(2), 0.0f, 0.01f));
+    }
+
+    // test euler
+    {
+        Euler<float> e = eulerAngles(q90x);
+        TEST(is_equal(degrees(e.roll()), 90.0f) && is_equal(degrees(e.pitch()), 0.0f) && is_equal(degrees(e.yaw()), 0.0f));
+        e = eulerAngles(q90y);
+        // pointing in direction of gimbal lock so we use a larger error tolerance
+        TEST(is_equal(degrees(e.roll()), 0.0f) && is_equal(degrees(e.pitch()), 90.0f, 0.2f) && is_equal(degrees(e.yaw()), 0.0f));
+        e = eulerAngles(q90z);
+        TEST(is_equal(degrees(e.roll()), 0.0f) && is_equal(degrees(e.pitch()), 0.0f) && is_equal(degrees(e.yaw()), 90.0f));
+
     }
     return 0;
 }
