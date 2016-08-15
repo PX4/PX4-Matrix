@@ -1,4 +1,4 @@
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
 using namespace matrix;
@@ -100,7 +100,7 @@ int main()
     TEST(fabs(m5(0,0) - s) < 1e-5);
 
     Matrix<float, 2, 2> m6;
-    m6.setRow(0, Vector2f(1, 2));
+    m6.setRow(0, Vector2f(1, 2).transposed());
     float m7_array[] = {1,2,0,0};
     Matrix<float, 2, 2> m7(m7_array);
     TEST(isEqual(m6, m7));
