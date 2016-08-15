@@ -91,6 +91,12 @@ public:
         return (*this);
     }
 
+	static const Matrix<Type, M, N> &Identity(){
+		static Matrix<Type, M, N> res; 
+		res.setIdentity(); 
+		return res; 
+	}
+
     /**
      * Matrix Operations
      */
@@ -306,6 +312,8 @@ public:
         printf("%s\n", buf);
     }
 
+	// alias
+	inline Matrix<Type, N, M> transposed() const { return transpose(); }
     Matrix<Type, N, M> transpose() const
     {
         Matrix<Type, N, M> res;
