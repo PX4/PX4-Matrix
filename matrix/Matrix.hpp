@@ -51,6 +51,13 @@ public:
         memcpy(_data, data_, sizeof(_data));
     }
 
+    Matrix(const Type data_[M][N]) :
+        _data()
+    {
+        memcpy(_data, data_, sizeof(_data));
+    }
+
+
     Matrix(const Matrix &other) :
         _data()
     {
