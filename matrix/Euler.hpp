@@ -160,7 +160,7 @@ public:
         return (*this)(2);
     }
 
-	// Remark: please call them something more sane
+    // Remark: please call them something more sane
     inline Type roll() const {
         return (*this)(0);
     }
@@ -177,8 +177,8 @@ public:
 typedef Euler<float> Eulerf;
 
 template<typename Type>
-Euler<Type> eulerAngles(const Quaternion<Type> &q){
-	return Euler<Type>(q); 
+Euler<Type> eulerAngles(const Quaternion<Type> &q) {
+    return Euler<Type>(q);
 }
 
 } // namespace matrix

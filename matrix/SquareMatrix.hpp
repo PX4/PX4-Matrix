@@ -50,8 +50,8 @@ public:
         return inv(*this);
     }
 
-	// another alias
-	inline SquareMatrix<Type, M> inversed() const
+    // another alias
+    inline SquareMatrix<Type, M> inversed() const
     {
         return inv(*this);
     }

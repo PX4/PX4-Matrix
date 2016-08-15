@@ -88,16 +88,16 @@ class Quaternion;
 
 template<typename Type>
 Vector3<Type> operator* (const Quaternion<Type> &q, const Vector3<Type>& v) {
-	// nVidia SDK implementation
-	Vector3<Type> uv, uuv;
-	const float qdata[3] = {q(1), q(2), q(3)}; 
-	Vector3<Type> qvec(qdata);
-	uv = qvec.cross(v);
-	uuv = qvec.cross(uv);
-	uv *= (2.0f * q(0));
-	uuv *= 2.0f;
+    // nVidia SDK implementation
+    Vector3<Type> uv, uuv;
+    const float qdata[3] = {q(1), q(2), q(3)};
+    Vector3<Type> qvec(qdata);
+    uv = qvec.cross(v);
+    uuv = qvec.cross(uv);
+    uv *= (2.0f * q(0));
+    uuv *= 2.0f;
 
-	return v + uv + uuv;
+    return v + uv + uuv;
 }
 
 

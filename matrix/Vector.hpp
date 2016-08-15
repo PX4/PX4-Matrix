@@ -62,7 +62,7 @@ public:
     }
 
     Type length() const {
-		return norm(); 
+        return norm();
     }
 
     Type norm() const {
@@ -73,10 +73,10 @@ public:
     inline void normalize() {
         (*this) /= norm();
     }
-	
-	inline Vector normalized() const { 
-		return (*this) / norm(); 
-	}
+
+    inline Vector normalized() const {
+        return (*this) / norm();
+    }
 
     Vector unit() const {
         return (*this) / norm();

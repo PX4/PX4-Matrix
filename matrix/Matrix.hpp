@@ -42,7 +42,7 @@ public:
     Matrix() :
         _data()
     {
-		memset(_data, 0, sizeof(_data)); 
+        memset(_data, 0, sizeof(_data));
     }
 
     Matrix(const Type *data_) :
@@ -91,11 +91,11 @@ public:
         return (*this);
     }
 
-	static const Matrix<Type, M, N> &Identity(){
-		static Matrix<Type, M, N> res; 
-		res.setIdentity(); 
-		return res; 
-	}
+    static const Matrix<Type, M, N> &Identity() {
+        static Matrix<Type, M, N> res;
+        res.setIdentity();
+        return res;
+    }
 
     /**
      * Matrix Operations
@@ -308,8 +308,10 @@ public:
         printf("%s\n", buf);
     }
 
-	// alias
-	inline Matrix<Type, N, M> transposed() const { return transpose(); }
+    // alias
+    inline Matrix<Type, N, M> transposed() const {
+        return transpose();
+    }
     Matrix<Type, N, M> transpose() const
     {
         Matrix<Type, N, M> res;
@@ -348,23 +350,23 @@ public:
         }
     }
 
-	Matrix<Type, 1, N> getRow(size_t i){
+    Matrix<Type, 1, N> getRow(size_t i) {
         Matrix<Type, M, N> &self = *this;
-		Matrix<Type, 1, N> res; 
-		for(size_t c = 0; c < N; c++){
-			res(0, c) = self(i, c); 
-		}
-		return res; 
-	}
-	
-	Matrix<Type, M, 1> getCol(size_t j){
+        Matrix<Type, 1, N> res;
+        for(size_t c = 0; c < N; c++) {
+            res(0, c) = self(i, c);
+        }
+        return res;
+    }
+
+    Matrix<Type, M, 1> getCol(size_t j) {
         Matrix<Type, M, N> &self = *this;
-		Matrix<Type, M, 1> res; 
-		for(size_t c = 0; c < M; c++){
-			res(c, 0) = self(c, j); 
-		}
-		return res; 
-	}
+        Matrix<Type, M, 1> res;
+        for(size_t c = 0; c < M; c++) {
+            res(c, 0) = self(c, j);
+        }
+        return res;
+    }
 
     void setRow(size_t i, const Matrix<Type, 1, N> &row)
     {
@@ -481,19 +483,19 @@ public:
         }
         return min_val;
     }
-	
-	Matrix<Type, M, N> limited(const Matrix<Type, M, N> &_min, const Matrix<Type, M, N> &_max){
-		Matrix<Type, M, N> res; 
-		for (size_t i=0; i<M; i++) {
+
+    Matrix<Type, M, N> limited(const Matrix<Type, M, N> &_min, const Matrix<Type, M, N> &_max) {
+        Matrix<Type, M, N> res;
+        for (size_t i=0; i<M; i++) {
             for (size_t j=0; j<N; j++) {
-				float r = (*this)(i, j); 
-				if(r < _min(i, j)) r = _min(i, j); 
-				if(r > _max(i, j)) r = _max(i, j); 
-				res(i, j) = r; 
+                float r = (*this)(i, j);
+                if(r < _min(i, j)) r = _min(i, j);
+                if(r > _max(i, j)) r = _max(i, j);
+                res(i, j) = r;
             }
         }
-		return res; 
-	}
+        return res;
+    }
 };
 
 template<typename Type, size_t M, size_t N>
@@ -531,7 +533,7 @@ bool isEqual(const Matrix<Type, M, N> &x,
 
 template<typename Type, size_t M>
 inline Matrix<Type, M, M> inversed(Matrix<Type, M, M> const &m) {
-	return SquareMatrix<Type, M>(m).I(); 
+    return SquareMatrix<Type, M>(m).I();
 }
 
 #if defined(SUPPORT_STDIOSTREAM)
