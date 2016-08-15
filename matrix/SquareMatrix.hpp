@@ -50,6 +50,13 @@ public:
         return inv(*this);
     }
 
+	// another alias
+	inline SquareMatrix<Type, M> inversed() const
+    {
+        return inv(*this);
+    }
+
+
     Vector<Type, M> diag() const
     {
         Vector<Type, M> res;
