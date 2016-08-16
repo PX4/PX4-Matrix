@@ -17,6 +17,7 @@ set(tests
 	quaternion
 	helper
 	hatvee
+	glm_compliance
 	)
 
 add_custom_target(test_build)

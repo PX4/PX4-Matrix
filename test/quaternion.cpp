@@ -9,21 +9,6 @@ using namespace matrix;
 
 template class Vector<float, 5>;
 
-inline float radians(float deg) {
-    return M_PI / 180.0f * deg;
-}
-
-inline float degrees(float rad) {
-    return rad / (M_PI / 180.0f);
-}
-
-inline bool is_equal(float a, float b, float e) {
-    return fabsf(a - b) < e;
-}
-inline bool is_equal(float a, float b) {
-    return is_equal(a, b, FLT_EPSILON);
-}
-
 int main() {
     Quaternion<float> q90x(cos(radians(90.0f/2.0f)), sin(radians(90.0f/2.0f)), 0, 0);
     //Quaternion<float> q90y(cos(radians(90.0f/2.0f)), 0, sin(radians(90.0f/2.0f)), 0);
@@ -87,7 +72,7 @@ int main() {
 
         Vector3f vx(0, 0, 1);
         Vector3f rx = qq * vx;
-        // vector should now point along negative y axis (above first applies rotations of 90 around y and then 90 around x).
+        // vector should now point along negative x axis (above first applies rotations of 90 around y and then 90 around x).
         TEST(is_equal(rx(0), 0.0f, 0.01f) && is_equal(rx(1), -1.0f, 0.01f) && is_equal(rx(2), 0.0f, 0.01f));
     }
 
