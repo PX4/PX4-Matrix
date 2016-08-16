@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
 using namespace matrix;
@@ -34,7 +34,7 @@ int main()
     A_large_I.setZero();
 
     for (size_t i = 0; i < n_large; i++) {
-        A_large_I = inv(A_large);
+        A_large_I = A_large.inversed();
         TEST(isEqual(A_large, A_large_I));
     }
 

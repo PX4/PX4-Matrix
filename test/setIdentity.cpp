@@ -1,4 +1,4 @@
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
 using namespace matrix;
@@ -8,7 +8,7 @@ template class Matrix<float, 3, 3>;
 int main()
 {
     Matrix3f A;
-    A.setIdentity();
+    A = Matrix<float, 3, 3>::Identity();
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {

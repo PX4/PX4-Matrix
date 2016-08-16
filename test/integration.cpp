@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <matrix/integration.hpp>
+#include "../matrix/integration.hpp"
 #include "test_macros.hpp"
 
 using namespace matrix;
