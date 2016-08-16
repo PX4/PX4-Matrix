@@ -51,7 +51,7 @@ set(CMAKE_CXX_FLAGS
 	-Werror=uninitialized
 	-Werror=init-self
 	-Wcast-qual
-	-Wno-conversion
+	-Wconversion
 	-Wcast-align
 	-Werror
 	)

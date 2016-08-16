@@ -15,6 +15,8 @@
 #include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
+#pragma GCC diagnostic warning "-Wconversion"
+
 using namespace matrix;
 
 int main() {

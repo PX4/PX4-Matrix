@@ -11,19 +11,31 @@
 #include <cfloat>
 #include <math.h>
 
-inline float radians(float deg) {
-    return M_PI / 180.0f * deg;
+template<typename Type>
+inline Type radians(Type deg) {
+    return Type(M_PI) / Type(180.0) * deg;
 }
 
-inline float degrees(float rad) {
-    return rad / (M_PI / 180.0f);
+template<typename Type>
+inline Type degrees(Type rad) {
+    return rad / (Type(M_PI) / Type(180.0));
 }
 
 inline bool is_equal(float a, float b, float e) {
     return fabsf(a - b) < e;
 }
+
 inline bool is_equal(float a, float b) {
     return is_equal(a, b, FLT_EPSILON);
 }
+
+inline bool is_equal(double a, double b, double e) {
+    return fabs(a - b) < e;
+}
+
+inline bool is_equal(double a, double b) {
+    return is_equal(a, b, DBL_EPSILON);
+}
+
 
 #define TEST(X) if(!(X)) { fprintf(stderr, "test failed on %s:%d\n", __FILE__, __LINE__); return -1;}

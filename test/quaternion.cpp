@@ -5,6 +5,8 @@
 #include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
+#pragma GCC diagnostic warning "-Wconversion"
+
 using namespace matrix;
 
 template class Vector<float, 5>;
