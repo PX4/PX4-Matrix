@@ -14,8 +14,10 @@ set(tests
 	filter
 	integration
 	squareMatrix
+	quaternion
 	helper
 	hatvee
+	glm_compliance
 	)
 
 add_custom_target(test_build)

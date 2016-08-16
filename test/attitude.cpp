@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <stdexcept>
 
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 #include "test_macros.hpp"
 
 using namespace matrix;
@@ -49,8 +49,8 @@ int main()
     TEST(isEqual(euler_copy, euler_check));
 
     // quaternion ctor
-    Quatf q0(1, 2, 3, 4);
-    Quatf q(q0);
+    Quaternion<float> q0(1, 2, 3, 4);
+    Quaternion<float> q(q0);
     TEST(fabs(q(0) - 1) < eps);
     TEST(fabs(q(1) - 2) < eps);
     TEST(fabs(q(2) - 3) < eps);

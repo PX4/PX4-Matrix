@@ -1,4 +1,4 @@
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 
 #include "test_macros.hpp"
 

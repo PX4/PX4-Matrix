@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "test_macros.hpp"
 
-#include <matrix/math.hpp>
+#include "../matrix/math.hpp"
 
 using namespace matrix;
 
