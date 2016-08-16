@@ -196,10 +196,17 @@ public:
     {
         const Quaternion &p = *this;
         Quaternion r;
+#if 0
         r(0) = p(0) * q(0) - p(1) * q(1) - p(2) * q(2) - p(3) * q(3);
         r(1) = p(0) * q(1) + p(1) * q(0) - p(2) * q(3) + p(3) * q(2);
         r(2) = p(0) * q(2) + p(1) * q(3) + p(2) * q(0) - p(3) * q(1);
         r(3) = p(0) * q(3) - p(1) * q(2) + p(2) * q(1) + p(3) * q(0);
+#endif
+        // Hamilton notation is like this:
+        r(0) = p(0) * q(0) - p(1) * q(1) - p(2) * q(2) - p(3) * q(3);
+        r(1) = p(0) * q(1) + p(1) * q(0) + p(2) * q(3) - p(3) * q(2);
+        r(2) = p(0) * q(2) - p(1) * q(3) + p(2) * q(0) + p(3) * q(1);
+        r(3) = p(0) * q(3) + p(1) * q(2) - p(2) * q(1) + p(3) * q(0);
         return r;
     }
 
@@ -299,8 +306,8 @@ public:
      *
      * @return inverted quaternion
      */
-    Quaternion inversed() {
-        Quaternion &q = *this;
+    Quaternion inversed() const {
+        const Quaternion &q = *this;
         Quaternion ret;
         ret(0) = q(0);
         ret(1) = -q(1);
