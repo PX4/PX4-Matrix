@@ -87,6 +87,14 @@ int main() {
         TEST(is_equal(degrees(e.roll()), 0.0f) && is_equal(degrees(e.pitch()), 0.0f) && is_equal(degrees(e.yaw()), 90.0f));
 
     }
+
+	// test lerp and slerp
+	{
+		Euler<float> ex = eulerAngles(slerp(Quaternion<float>(), q90x, 0.5f, 0.0f)); 
+		Euler<float> ey = eulerAngles(lerp(Quaternion<float>(), Quaternion<float>(cos(radians(0.5f/2)), 0, sin(radians(0.5f/2)), 0), 0.5f)); 
+		TEST(is_equal(degrees(ex.roll()), 45.0f) && is_equal(ex.pitch(), 0) && is_equal(ex.yaw(), 0)); 
+		TEST(is_equal(ey.roll(), 0) && is_equal(degrees(ey.pitch()), 0.25f, 0.02f) && is_equal(ey.yaw(), 0)); 
+	}
     return 0;
 }
 
