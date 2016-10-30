@@ -156,6 +156,14 @@ public:
         v(2) = -A(0,1);
         return v;
     }
+
+    void renormalize() {
+		/* renormalize rows */
+		for (int row = 0; row < 3; row++) {
+			matrix::Vector3f rvec(this->_data[row]);
+			this->setRow(row, rvec.normalized());
+		}
+    }
 };
 
 typedef Dcm<float> Dcmf;
