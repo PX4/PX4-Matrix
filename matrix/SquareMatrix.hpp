@@ -126,7 +126,7 @@ SquareMatrix <Type, M> inv(const SquareMatrix<Type, M> & A)
     for (size_t n = 0; n < M; n++) {
 
         // if diagonal is zero, swap with row below
-        if (fabsf(U(n, n)) < 1e-8f) {
+        if (fabsf(static_cast<float>(U(n, n))) < 1e-8f) {
             //printf("trying pivot for row %d\n",n);
             for (size_t i = 0; i < M; i++) {
                 if (i == n) {
@@ -134,7 +134,7 @@ SquareMatrix <Type, M> inv(const SquareMatrix<Type, M> & A)
                 }
 
                 //printf("\ttrying row %d\n",i);
-                if (fabsf(U(i, n)) > 1e-8f) {
+                if (fabsf(static_cast<float>(U(i, n))) > 1e-8f) {
                     //printf("swapped %d\n",i);
                     U.swapRows(i, n);
                     P.swapRows(i, n);
@@ -147,11 +147,11 @@ SquareMatrix <Type, M> inv(const SquareMatrix<Type, M> & A)
         //printf("U:\n"); U.print();
         //printf("P:\n"); P.print();
         //fflush(stdout);
-        ASSERT(fabsf(U(n, n)) > 1e-8f);
+        ASSERT(fabsf(static_cast<float>(U(n, n))) > 1e-8f);
 #endif
 
         // failsafe, return zero matrix
-        if (fabsf(U(n, n)) < 1e-8f) {
+        if (fabsf(static_cast<float>(U(n, n))) < 1e-8f) {
             SquareMatrix<Type, M> zero;
             zero.setZero();
             return zero;
