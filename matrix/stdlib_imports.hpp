@@ -13,8 +13,6 @@
 #include <cstdlib>
 #include <cinttypes>
 
-namespace matrix {
-
 #if defined(__PX4_NUTTX)
 /*
  * NuttX has no usable C++ math library, so we need to provide the needed definitions here manually.
@@ -113,8 +111,8 @@ using std::nextafter;
 using std::copysign;
 using std::fpclassify;
 using std::isfinite;
-using std::isinf;
-using std::isnan;
+//using std::isinf; // conflict with C isinf in global namespace
+//using std::isnan; // conflict with C isnan in global namespace
 using std::isnormal;
 using std::signbit;
 using std::isgreater;
@@ -126,5 +124,3 @@ using std::isunordered;
 
 # endif
 #endif
-
-}
