@@ -22,6 +22,7 @@ option(FORMAT "Enable formatting" OFF)
 option(COV_HTML "Display html for coverage" OFF)
 option(ASAN "Enable address sanitizer" OFF)
 option(UBSAN "Enable undefined behaviour sanitizer" OFF)
+option(HAMILTON "Use hamilton quaternion convention" OFF)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -38,6 +39,10 @@ set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
 	"--coverage -ftest-coverage -lgcov"
 	CACHE STRING "Flags used for linking binaries during coverage builds" FORCE)
 mark_as_advanced(CMAKE_CXX_FLAGS_COVERAGE CMAKE_C_FLAGS_COVERAGE CMAKE_EXE_LINKER_FLAGS_COVERAGE)
+
+if (HAMILTON)
+	add_definitions(-DMATRIX_HAMILTON_QUATERNION)
+endif()
 
 add_compile_options(
 	-pedantic
@@ -84,7 +89,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 		)
 else()
 	add_compile_options(
-		-Wstrict-overflow=5
+		-Wstrict-overflow
 		)
 endif()
 
