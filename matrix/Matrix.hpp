@@ -481,7 +481,7 @@ Matrix<Type, M, N> operator*(Type scalar, const Matrix<Type, M, N> &other)
 
 template<typename Type, size_t  M, size_t N>
 bool isEqual(const Matrix<Type, M, N> &x,
-             const Matrix<Type, M, N> &y, const Type eps=1e-4f) {
+             const Matrix<Type, M, N> &y, const Type eps=static_cast<Type>(1e-4)) {
 
     bool equal = true;
 

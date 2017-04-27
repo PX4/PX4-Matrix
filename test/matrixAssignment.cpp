@@ -94,17 +94,17 @@ int main()
     m4.swapCols(2, 2);
     TEST(isEqual(m4, Matrix3f(data)));
 
-    TEST(fabs(m4.min() - 1) < 1e-5);
-    TEST(fabs((-m4).min() + 9) < 1e-5);
+    TEST(abs(m4.min() - 1) < 1e-5f);
+    TEST(abs((-m4).min() + 9) < 1e-5f);
 
     Scalar<float> s;
     s = 1;
     const Vector<float, 1> & s_vect = s;
-    TEST(fabs(s - 1) < 1e-5);
-    TEST(fabs(s_vect(0) - 1.0f) < 1e-5);
+    TEST(abs(s - 1) < 1e-5f);
+    TEST(abs(s_vect(0) - 1.0f) < 1e-5f);
 
     Matrix<float, 1, 1> m5 = s;
-    TEST(fabs(m5(0,0) - s) < 1e-5);
+    TEST(abs(m5(0,0) - s) < 1e-5f);
 
     Matrix<float, 2, 2> m6;
     m6.setRow(0, Vector2f(1, 2));

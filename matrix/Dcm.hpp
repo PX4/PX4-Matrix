@@ -54,7 +54,7 @@ public:
     /**
      * Constructor from array
      *
-     * @param _data pointer to array
+     * @param data_ pointer to array
      */
     Dcm(const Type *data_) : SquareMatrix<Type, 3>(data_)
     {
@@ -139,7 +139,7 @@ public:
      * from frame 1 to frame 2 is described by a 3-2-1 intrinsic Tait-Bryan rotation sequence.
      *
      *
-     * @param euler euler angle instance
+     * @param aa euler angle instance
      */
     Dcm(const AxisAngle<Type> &aa)
     {

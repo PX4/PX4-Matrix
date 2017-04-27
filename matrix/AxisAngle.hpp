@@ -137,8 +137,8 @@ public:
     /**
      * Constructor from axis and angle
      *
-     * @param axis An axis of rotation, normalized if not unit length
-     * @param angle The amount to rotate
+     * @param axis_ An axis of rotation, normalized if not unit length
+     * @param angle_ The amount to rotate
      */
     AxisAngle(const Matrix31 & axis_, Type angle_) :
         Vector<Type, 3>()

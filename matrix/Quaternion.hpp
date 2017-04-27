@@ -87,7 +87,7 @@ public:
      * Instance is initialized from a dcm representing coordinate transformation
      * from frame 2 to frame 1.
      *
-     * @param dcm dcm to set quaternion to
+     * @param R dcm to set quaternion to
      */
     Quaternion(const Dcm<Type> &R) :
         Vector<Type, 4>()
@@ -353,7 +353,6 @@ public:
      * the angle is given by the norm.
      *
      * @param vec rotation vector
-     * @return quaternion representing the rotation
      */
     void from_axis_angle(Vector<Type, 3> vec)
     {
@@ -376,7 +375,6 @@ public:
      *
      * @param axis axis of rotation
      * @param theta scalar describing angle of rotation
-     * @return quaternion representing the rotation
      */
     void from_axis_angle(const Vector<Type, 3> &axis, Type theta)
     {

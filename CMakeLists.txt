@@ -57,9 +57,6 @@ add_compile_options(
 	-Wlogical-op
 	-Wmissing-declarations
 	-Wmissing-include-dirs
-	-Wno-sign-compare
-	-Wno-unused
-	-Wno-unused-parameter
 	-Wnoexcept
 	-Wold-style-cast
 	-Woverloaded-virtual
@@ -74,6 +71,8 @@ add_compile_options(
 	-Wundef
 	-Wuninitialized
 	-Wunused-variable
+	-Weverything
+	-Wno-c++98-compat
 	)
 
 # clang tolerate unknown gcc options
@@ -81,10 +80,6 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	add_compile_options(
 		-Wno-error=unused-command-line-argument-hard-error-in-future
 		-Wno-unknown-warning-option
-		)
-else()
-	add_compile_options(
-		-Wstrict-overflow=5
 		)
 endif()
 

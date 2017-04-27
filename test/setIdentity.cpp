@@ -11,10 +11,10 @@ int main()
     for (size_t i = 0; i < 3; i++) {
         for (size_t j = 0; j < 3; j++) {
             if (i == j) {
-                TEST(fabs(A(i, j) -  1) < 1e-7);
+                TEST(fabs(A(i, j) -  1) < 1e-7f);
 
             } else {
-                TEST(fabs(A(i, j) -  0) < 1e-7);
+                TEST(fabs(A(i, j) -  0) < 1e-7f);
             }
         }
     }
@@ -25,10 +25,10 @@ int main()
     for (size_t i = 0; i < 3; i++) {
         for (size_t j = 0; j < 3; j++) {
             if (i == j) {
-                TEST(fabs(B(i, j) -  1) < 1e-7);
+                TEST(fabs(B(i, j) -  1) < 1e-7f);
 
             } else {
-                TEST(fabs(B(i, j) -  0) < 1e-7);
+                TEST(fabs(B(i, j) -  0) < 1e-7f);
             }
         }
     }

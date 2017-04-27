@@ -91,7 +91,7 @@ public:
         const Vector &a(*this);
         Vector r;
         for (size_t i = 0; i<M; i++) {
-            r(i) = Type(::pow(a(i), v));
+            r(i) = Type(std::pow(a(i), v));
         }
         return r;
     }

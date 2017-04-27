@@ -5,7 +5,7 @@ using namespace matrix;
 
 int main()
 {
-    double eps = 1e-6;
+    float eps = 1e-6f;
 
     // check data
     Eulerf euler_check(0.1f, 0.2f, 0.3f);
@@ -37,10 +37,10 @@ int main()
     // quaternion ctor
     Quatf q0(1, 2, 3, 4);
     Quatf q(q0);
-    TEST(fabs(q(0) - 1) < eps);
-    TEST(fabs(q(1) - 2) < eps);
-    TEST(fabs(q(2) - 3) < eps);
-    TEST(fabs(q(3) - 4) < eps);
+    TEST(abs(q(0) - 1) < eps);
+    TEST(abs(q(1) - 2) < eps);
+    TEST(abs(q(2) - 3) < eps);
+    TEST(abs(q(3) - 4) < eps);
 
     // quat normalization
     q.normalize();
@@ -94,7 +94,7 @@ int main()
 
     for (auto & row : A._data) {
         Vector3f rvec(row);
-        err += fabs(1.0f - rvec.length());
+        err += abs(1.0f - rvec.length());
     }
     TEST(err < eps);
 
@@ -202,17 +202,17 @@ int main()
 
     // quaternion inverse
     q = q_check.inversed();
-    TEST(fabs(q_check(0) - q(0)) < eps);
-    TEST(fabs(q_check(1) + q(1)) < eps);
-    TEST(fabs(q_check(2) + q(2)) < eps);
-    TEST(fabs(q_check(3) + q(3)) < eps);
+    TEST(abs(q_check(0) - q(0)) < eps);
+    TEST(abs(q_check(1) + q(1)) < eps);
+    TEST(abs(q_check(2) + q(2)) < eps);
+    TEST(abs(q_check(3) + q(3)) < eps);
 
     q = q_check;
     q.invert();
-    TEST(fabs(q_check(0) - q(0)) < eps);
-    TEST(fabs(q_check(1) + q(1)) < eps);
-    TEST(fabs(q_check(2) + q(2)) < eps);
-    TEST(fabs(q_check(3) + q(3)) < eps);
+    TEST(abs(q_check(0) - q(0)) < eps);
+    TEST(abs(q_check(1) + q(1)) < eps);
+    TEST(abs(q_check(2) + q(2)) < eps);
+    TEST(abs(q_check(3) + q(3)) < eps);
 
     // non-unit quaternion invese
     Quatf qI(1.0f, 0.0f, 0.0f, 0.0f);
@@ -225,10 +225,10 @@ int main()
     rot(1) = rot(2) = 0.0f;
     qI.rotate(rot);
     Quatf q_true(cos(1.0f / 2), sin(1.0f / 2), 0.0f, 0.0f);
-    TEST(fabs(qI(0) - q_true(0)) < eps);
-    TEST(fabs(qI(1) - q_true(1)) < eps);
-    TEST(fabs(qI(2) - q_true(2)) < eps);
-    TEST(fabs(qI(3) - q_true(3)) < eps);
+    TEST(abs(qI(0) - q_true(0)) < eps);
+    TEST(abs(qI(1) - q_true(1)) < eps);
+    TEST(abs(qI(2) - q_true(2)) < eps);
+    TEST(abs(qI(3) - q_true(3)) < eps);
 
     // rotate quaternion (zero rotation)
     qI = Quatf(1.0f, 0.0f, 0.0f, 0.0f);
@@ -236,41 +236,42 @@ int main()
     rot(1) = rot(2) = 0.0f;
     qI.rotate(rot);
     q_true = Quatf(cos(0.0f), sin(0.0f), 0.0f, 0.0f);
-    TEST(fabs(qI(0) - q_true(0)) < eps);
-    TEST(fabs(qI(1) - q_true(1)) < eps);
-    TEST(fabs(qI(2) - q_true(2)) < eps);
-    TEST(fabs(qI(3) - q_true(3)) < eps);
+    TEST(abs(qI(0) - q_true(0)) < eps);
+    TEST(abs(qI(1) - q_true(1)) < eps);
+    TEST(abs(qI(2) - q_true(2)) < eps);
+    TEST(abs(qI(3) - q_true(3)) < eps);
 
     // get rotation axis from quaternion (nonzero rotation)
     q = Quatf(cos(1.0f / 2), 0.0f, sin(1.0f / 2), 0.0f);
     rot = q.to_axis_angle();
-    TEST(fabs(rot(0)) < eps);
-    TEST(fabs(rot(1) - 1.0f) < eps);
-    TEST(fabs(rot(2)) < eps);
+    TEST(abs(rot(0)) < eps);
+    TEST(abs(rot(1) - 1.0f) < eps);
+    TEST(abs(rot(2)) < eps);
 
     // get rotation axis from quaternion (zero rotation)
     q = Quatf(1.0f, 0.0f, 0.0f, 0.0f);
     rot = q.to_axis_angle();
-    TEST(fabs(rot(0)) < eps);
-    TEST(fabs(rot(1)) < eps);
-    TEST(fabs(rot(2)) < eps);
+    TEST(abs(rot(0)) < eps);
+    TEST(abs(rot(1)) < eps);
+    TEST(abs(rot(2)) < eps);
 
     // from axis angle (zero rotation)
     rot(0) = rot(1) = rot(2) = 0.0f;
     q.from_axis_angle(rot, 0.0f);
     q_true = Quatf(1.0f, 0.0f, 0.0f, 0.0f);
-    TEST(fabs(q(0) - q_true(0)) < eps);
-    TEST(fabs(q(1) - q_true(1)) < eps);
-    TEST(fabs(q(2) - q_true(2)) < eps);
-    TEST(fabs(q(3) - q_true(3)) < eps);
+    TEST(abs(q(0) - q_true(0)) < eps);
+    TEST(abs(q(1) - q_true(1)) < eps);
+    TEST(abs(q(2) - q_true(2)) < eps);
+    TEST(abs(q(3) - q_true(3)) < eps);
 
     // Quaternion initialisation per array
     float q_array[] = {0.9833f, -0.0343f, -0.1060f, -0.1436f};
     Quaternion<float>q_from_array(q_array);
 
-    for (size_t i = 0; i < 4; i++) {
-        TEST(fabs(q_from_array(i) - q_array[i]) < eps);
-    }
+    TEST(abs(q_from_array(0) - q(0)) < eps);
+    TEST(abs(q_from_array(1) - q(1)) < eps);
+    TEST(abs(q_from_array(2) - q(2)) < eps);
+    TEST(abs(q_from_array(3) - q(3)) < eps);
 
     // axis angle
     AxisAnglef aa_true(Vector3f(1.0f, 2.0f, 3.0f));
@@ -337,10 +338,10 @@ int main()
     q = Quatf(1, 2, 3, 4);
     float dst[4] = {};
     q.copyTo(dst);
-    TEST(fabs(q(0) - dst[0]) < eps);
-    TEST(fabs(q(1) - dst[1]) < eps);
-    TEST(fabs(q(2) - dst[2]) < eps);
-    TEST(fabs(q(3) - dst[3]) < eps);
+    TEST(abs(q(0) - dst[0]) < eps);
+    TEST(abs(q(1) - dst[1]) < eps);
+    TEST(abs(q(2) - dst[2]) < eps);
+    TEST(abs(q(3) - dst[3]) < eps);
 
 }
 
