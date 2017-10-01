@@ -79,7 +79,7 @@ public:
         (*this) /= norm();
     }
 
-    Vector unit() const {
+    inline Vector unit() const {
         return (*this) / norm();
     }
 
