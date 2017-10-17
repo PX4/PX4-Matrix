@@ -336,7 +336,7 @@ public:
     void rotate(const AxisAngle<Type> &vec)
     {
         Quaternion res(vec);
-        (*this) = res * (*this);
+        (*this) = (*this) * res;
     }
 
     /**
