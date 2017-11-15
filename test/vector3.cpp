@@ -6,6 +6,8 @@ using namespace matrix;
 
 int main()
 {
+    float eps = 1e-6f;
+
     Vector3f a(1, 0, 0);
     Vector3f b(0, 1, 0);
     Vector3f c = a.cross(b);
@@ -26,6 +28,14 @@ int main()
     TEST(isEqual(a.unit(), a));
     TEST(isEqual(a.unit(), a.normalized()));
     TEST(isEqual(a*2.0, Vector3f(2, 0, 0)));
+
+    // Vector3 copyTo
+    Vector3f v(1, 2, 3);
+    float dst[3] = {};
+    v.copyTo(dst);
+    TEST(fabs(v(0) - dst[0]) < eps);
+    TEST(fabs(v(1) - dst[1]) < eps);
+    TEST(fabs(v(2) - dst[2]) < eps);
 
     return 0;
 }
