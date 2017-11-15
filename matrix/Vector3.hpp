@@ -118,7 +118,10 @@ public:
         return unit();
     }
 
-
+    /**
+     * Hat operator to get skew symmetric matrix representing the cross product operation
+     * inverse operation: Dcm.vee()
+     */
     Dcm<Type> hat() const {    // inverse to Dcm.vee() operation
         const Vector3 &v(*this);
         Dcm<Type> A;

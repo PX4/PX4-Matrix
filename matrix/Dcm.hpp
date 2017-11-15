@@ -153,6 +153,12 @@ public:
         dcm = Quaternion<Type>(aa);
     }
 
+    /**
+     * Vee operator get the vector of a skew symmetric matrix
+     * inverse operation: Vector3.hat()
+     *
+     * @param dst array of 3 floats
+     */
     Vector<Type, 3> vee() const      // inverse to Vector.hat() operation
     {
         const Dcm &A(*this);
