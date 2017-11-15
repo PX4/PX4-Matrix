@@ -95,6 +95,19 @@ public:
     }
 
     /**
+     * Copy vector to a float array
+     *
+     * @param dst array of 3 floats
+     */
+    void copyTo(float (&dst)[3])
+    {
+        const Vector3 &v = *this;
+        dst[0] = v(0);
+        dst[1] = v(1);
+        dst[2] = v(2);
+    }
+
+    /**
      * Override vector ops so Vector3 type is returned
      */
     inline Vector3 unit() const {
