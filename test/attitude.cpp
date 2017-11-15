@@ -5,7 +5,7 @@ using namespace matrix;
 
 int main()
 {
-    double eps = 1e-6;
+    float eps = 1e-6f;
 
     // check data
     Eulerf euler_check(0.1f, 0.2f, 0.3f);
