@@ -22,19 +22,11 @@ class Vector : public Matrix<Type, M, 1>
 public:
     typedef Matrix<Type, M, 1> MatrixM1;
 
-    Vector() : MatrixM1()
-    {
-    }
+    Vector() = default;
+    Vector(const MatrixM1& other) : MatrixM1(other) {}
 
-    Vector(const MatrixM1 & other) :
-        MatrixM1(other)
-    {
-    }
-
-    Vector(const Type *data_) :
-        MatrixM1(data_)
-    {
-    }
+    explicit Vector(bool init) : MatrixM1(init) {}
+    explicit Vector(const Type data_[M]) : MatrixM1(data_) {}
 
     Type operator()(size_t i) const
     {
@@ -107,6 +99,20 @@ public:
             r(i) = Type(::pow(a(i), v));
         }
         return r;
+    }
+
+    /**
+     * Copy Vector to a float array
+     *
+     * @param dst array of M floats
+     */
+    void copyTo(Type (&dst)[M])
+    {
+        const Vector &x = *this;
+
+        for (size_t i = 0; i < M; i++) {
+            dst[i] = x(i);
+        }
     }
 };
 

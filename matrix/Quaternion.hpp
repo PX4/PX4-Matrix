@@ -62,16 +62,12 @@ public:
      *
      * @param data_ array
      */
-    Quaternion(const Type *data_) :
-        Vector<Type, 4>(data_)
-    {
-    }
+    Quaternion(const Type data_[4]) : Vector<Type, 4>(data_) {}
 
     /**
      * Standard constructor
      */
-    Quaternion() :
-        Vector<Type, 4>()
+    Quaternion() : Vector<Type, 4>(false)
     {
         Quaternion &q = *this;
         q(0) = 1;
@@ -85,10 +81,7 @@ public:
      *
      * @param other Matrix41 to copy
      */
-    Quaternion(const Matrix41 &other) :
-        Vector<Type, 4>(other)
-    {
-    }
+    Quaternion(const Matrix41 &other) : Vector<Type, 4>(other) {}
 
     /**
      * Constructor from dcm
@@ -98,8 +91,7 @@ public:
      *
      * @param dcm dcm to set quaternion to
      */
-    Quaternion(const Dcm<Type> &R) :
-        Vector<Type, 4>()
+    Quaternion(const Dcm<Type> &R) : Vector<Type, 4>(false)
     {
         Quaternion &q = *this;
         Type t = R.trace();
@@ -143,8 +135,7 @@ public:
      *
      * @param euler euler angle instance
      */
-    Quaternion(const Euler<Type> &euler) :
-        Vector<Type, 4>()
+    Quaternion(const Euler<Type> &euler) : Vector<Type, 4>(false)
     {
         Quaternion &q = *this;
         Type cosPhi_2 = Type(cos(euler.phi() / Type(2.0)));
@@ -168,8 +159,7 @@ public:
      *
      * @param aa axis-angle vector
      */
-    Quaternion(const AxisAngle<Type> &aa) :
-        Vector<Type, 4>()
+    Quaternion(const AxisAngle<Type> &aa) : Vector<Type, 4>(false)
     {
         Quaternion &q = *this;
         Type angle = aa.norm();
@@ -242,8 +232,7 @@ public:
      * @param c set quaternion value 2
      * @param d set quaternion value 3
      */
-    Quaternion(Type a, Type b, Type c, Type d) :
-        Vector<Type, 4>()
+    Quaternion(Type a, Type b, Type c, Type d) : Vector<Type, 4>(false)
     {
         Quaternion &q = *this;
         q(0) = a;
@@ -348,8 +337,9 @@ public:
      */
     Quaternion inversed()
     {
-        Quaternion &q = *this;
-        Type normSq = q.dot(q);
+        const Quaternion &q = *this;
+        const Type normSq = q.dot(q);
+
         return Quaternion(
                    q(0)/normSq,
                    -q(1)/normSq,
@@ -448,7 +438,6 @@ public:
         q(2) = axis(1) * magnitude;
         q(3) = axis(2) * magnitude;
     }
-
 
     /**
      * Rotation vector from quaternion

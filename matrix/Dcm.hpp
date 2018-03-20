@@ -46,18 +46,9 @@ public:
      *
      * Initializes to identity
      */
-    Dcm() : SquareMatrix<Type, 3>()
+    Dcm() : SquareMatrix<Type, 3>(false)
     {
         (*this) = eye<Type, 3>();
-    }
-
-    /**
-     * Constructor from array
-     *
-     * @param _data pointer to array
-     */
-    Dcm(const Type *data_) : SquareMatrix<Type, 3>(data_)
-    {
     }
 
     /**
@@ -65,9 +56,11 @@ public:
      *
      * @param other Matrix33 to set dcm to
      */
-    Dcm(const Matrix<Type, 3, 3> &other) : SquareMatrix<Type, 3>(other)
-    {
-    }
+    Dcm(const Matrix<Type, 3, 3> &other) : SquareMatrix<Type, 3>(other) {}
+
+    explicit Dcm(bool init) : SquareMatrix<Type, 3>(init) {}
+    explicit Dcm(const Type data_[3][3]) : SquareMatrix<Type, 3>(data_) {}
+    explicit Dcm(const Type data_[9]) : SquareMatrix<Type, 3>(data_) {}
 
     /**
      * Constructor from quaternion
@@ -77,7 +70,7 @@ public:
      *
      * @param q quaternion to set dcm to
      */
-    Dcm(const Quaternion<Type> &q)
+    Dcm(const Quaternion<Type> &q) : SquareMatrix<Type, 3>(false)
     {
         Dcm &dcm = *this;
         const Type a = q(0);
@@ -114,7 +107,7 @@ public:
      *
      * @param euler euler angle instance
      */
-    Dcm(const Euler<Type> &euler)
+    Dcm(const Euler<Type> &euler) : SquareMatrix<Type, 3>(false)
     {
         Dcm &dcm = *this;
         Type cosPhi = Type(cos(euler.phi()));
@@ -137,7 +130,6 @@ public:
         dcm(2, 2) = cosPhi * cosThe;
     }
 
-
     /**
      * Constructor from axis angle
      *
@@ -147,7 +139,7 @@ public:
      *
      * @param euler euler angle instance
      */
-    Dcm(const AxisAngle<Type> &aa)
+    Dcm(const AxisAngle<Type> &aa) : SquareMatrix<Type, 3>(false)
     {
         Dcm &dcm = *this;
         dcm = Quaternion<Type>(aa);

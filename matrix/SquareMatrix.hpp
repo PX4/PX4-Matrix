@@ -24,20 +24,13 @@ template<typename Type, size_t  M>
 class SquareMatrix : public Matrix<Type, M, M>
 {
 public:
-    SquareMatrix() :
-        Matrix<Type, M, M>()
-    {
-    }
+    SquareMatrix() = default;
 
-    SquareMatrix(const Type *data_) :
-        Matrix<Type, M, M>(data_)
-    {
-    }
+    SquareMatrix(const Matrix<Type, M, M> mat) : Matrix<Type, M, M>(mat) {}
 
-    SquareMatrix(const Matrix<Type, M, M> &other) :
-        Matrix<Type, M, M>(other)
-    {
-    }
+    explicit SquareMatrix(bool init) : Matrix<Type, M, M>(init) {}
+    explicit SquareMatrix(const Type data_[M][M]) : Matrix<Type, M, M>(data_) {}
+    explicit SquareMatrix(const Type data_[M*M]) : Matrix<Type, M, M>(data_) {}
 
     // inverse alias
     SquareMatrix<Type, M> I() const
@@ -51,13 +44,11 @@ public:
         }
     }
 
-
     // inverse alias
     bool I(SquareMatrix<Type, M> &i) const
     {
         return inv(*this, i);
     }
-
 
     Vector<Type, M> diag() const
     {

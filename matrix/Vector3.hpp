@@ -29,22 +29,10 @@ public:
 
     typedef Matrix<Type, 3, 1> Matrix31;
 
-    Vector3() :
-        Vector<Type, 3>()
-    {
-    }
+    Vector3() = default;
+    Vector3(const Matrix31& other) : Vector<Type, 3>(other) {}
 
-    Vector3(const Matrix31 & other) :
-        Vector<Type, 3>(other)
-    {
-    }
-
-    Vector3(const Type *data_) :
-        Vector<Type, 3>(data_)
-    {
-    }
-
-    Vector3(Type x, Type y, Type z) : Vector<Type, 3>()
+    Vector3(Type x, Type y, Type z) : Vector<Type, 3>(false)
     {
         Vector3 &v(*this);
         v(0) = x;
@@ -52,7 +40,9 @@ public:
         v(2) = z;
     }
 
-    Vector3 cross(const Matrix31 & b)  const {
+    explicit Vector3(const Type data_[3]) : Vector<Type, 3>(data_) {}
+
+    Vector3 cross(const Matrix31& b) const {
         const Vector3 &a(*this);
         Vector3 c;
         c(0) = a(1)*b(2,0) - a(2)*b(1,0);
@@ -104,7 +94,6 @@ public:
     Vector3 normalized() const {
         return unit();
     }
-
 
     Dcm<Type> hat() const {    // inverse to Dcm.vee() operation
         const Vector3 &v(*this);

@@ -23,34 +23,24 @@ public:
 
     typedef Matrix<Type, 2, 1> Matrix21;
 
-    Vector2() :
-        Vector<Type, 2>()
-    {
-    }
+    Vector2() = default;
+    Vector2(const Matrix21& other) : Vector<Type, 2>(other) {}
 
-    Vector2(const Matrix21 & other) :
-        Vector<Type, 2>(other)
-    {
-    }
-
-    Vector2(const Type *data_) :
-        Vector<Type, 2>(data_)
-    {
-    }
-
-    Vector2(Type x, Type y) : Vector<Type, 2>()
+    Vector2(Type x, Type y) : Vector<Type, 2>(false)
     {
         Vector2 &v(*this);
         v(0) = x;
         v(1) = y;
     }
 
-    Type cross(const Matrix21 & b)  const {
+    Vector2(const Type data_[2]) : Vector<Type, 2>(data_) {}
+
+    Type cross(const Matrix<Type, 2, 1>& b) const {
         const Vector2 &a(*this);
         return a(0)*b(1, 0) - a(1)*b(0, 0);
     }
 
-    Type operator%(const Matrix21 & b) const {
+    Type operator%(const Matrix<Type, 2, 1>& b) const {
         return (*this).cross(b);
     }
 

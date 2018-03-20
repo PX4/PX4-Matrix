@@ -43,29 +43,21 @@ public:
     /**
      * Standard constructor
      */
-    Euler() : Vector<Type, 3>()
-    {
-    }
+    Euler() = default;
 
     /**
-     * Copy constructor
+     * Copy constructor from Vector
      *
      * @param other vector to copy
      */
-    Euler(const Vector<Type, 3> &other) :
-        Vector<Type, 3>(other)
-    {
-    }
+    Euler(const Vector<Type, 3> &other) : Vector<Type, 3>(other) {}
 
     /**
      * Constructor from Matrix31
      *
      * @param other Matrix31 to copy
      */
-    Euler(const Matrix<Type, 3, 1> &other) :
-        Vector<Type, 3>(other)
-    {
-    }
+    Euler(const Matrix<Type, 3, 1> &other) : Vector<Type, 3>(other) {}
 
     /**
      * Constructor from euler angles
@@ -78,7 +70,7 @@ public:
      * @param theta_ rotation angle about Y axis
      * @param psi_ rotation angle about Z axis
      */
-    Euler(Type phi_, Type theta_, Type psi_) : Vector<Type, 3>()
+    Euler(Type phi_, Type theta_, Type psi_) : Vector<Type, 3>(false)
     {
         phi() = phi_;
         theta() = theta_;
@@ -95,7 +87,7 @@ public:
      *
      * @param dcm Direction cosine matrix
     */
-    Euler(const Dcm<Type> &dcm) : Vector<Type, 3>()
+    Euler(const Dcm<Type> &dcm) : Vector<Type, 3>(false)
     {
         Type phi_val = Type(atan2(dcm(2, 1), dcm(2, 2)));
         Type theta_val = Type(asin(-dcm(2, 0)));
@@ -126,8 +118,7 @@ public:
      *
      * @param q quaternion
     */
-    Euler(const Quaternion<Type> &q) :
-        Vector<Type, 3>()
+    Euler(const Quaternion<Type> &q) : Vector<Type, 3>(false)
     {
         *this = Euler(Dcm<Type>(q));
     }

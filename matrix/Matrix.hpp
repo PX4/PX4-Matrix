@@ -33,31 +33,30 @@ public:
     Type _data[M][N];
 
     // Constructors
-    Matrix() : _data() {}
+    Matrix() {
+        setZero();
+    }
 
-    Matrix(const Type data_[][N]) : _data()
+    explicit Matrix(bool init)
+    {
+        if (init) {
+            setZero();
+        }
+    }
+
+    explicit Matrix(const Type data_[M*N])
     {
         memcpy(_data, data_, sizeof(_data));
     }
 
-    Matrix(const Type *data_) : _data()
+    explicit Matrix(const Type data_[M][N])
     {
         memcpy(_data, data_, sizeof(_data));
-    }
-
-    Matrix(const Matrix &other) : _data()
-    {
-        memcpy(_data, other._data, sizeof(_data));
     }
 
     /**
      * Accessors/ Assignment etc.
      */
-
-    Type *data()
-    {
-        return _data[0];
-    }
 
     const Type *data() const
     {
@@ -72,14 +71,6 @@ public:
     Type &operator()(size_t i, size_t j)
     {
         return _data[i][j];
-    }
-
-    Matrix<Type, M, N> & operator=(const Matrix<Type, M, N> &other)
-    {
-        if (this != &other) {
-            memcpy(_data, other._data, sizeof(_data));
-        }
-        return (*this);
     }
 
     void copyTo(Type (&dst)[M*N]) const
