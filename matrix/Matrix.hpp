@@ -64,12 +64,12 @@ public:
         return _data[0];
     }
 
-    inline Type operator()(size_t i, size_t j) const
+    Type operator()(size_t i, size_t j) const
     {
         return _data[i][j];
     }
 
-    inline Type &operator()(size_t i, size_t j)
+    Type &operator()(size_t i, size_t j)
     {
         return _data[i][j];
     }
@@ -237,7 +237,7 @@ public:
         return res;
     }
 
-    inline Matrix<Type, M, N> operator/(Type scalar) const
+    Matrix<Type, M, N> operator/(Type scalar) const
     {
         return (*this)*(1/scalar);
     }
@@ -256,7 +256,7 @@ public:
         return res;
     }
 
-    inline Matrix<Type, M, N> operator-(Type scalar) const
+    Matrix<Type, M, N> operator-(Type scalar) const
     {
         return (*this) + (-1*scalar);
     }
@@ -278,12 +278,12 @@ public:
         self = self * (1.0f / scalar);
     }
 
-    inline void operator+=(Type scalar)
+    void operator+=(Type scalar)
     {
         *this = (*this) + scalar;
     }
 
-    inline void operator-=(Type scalar)
+    void operator-=(Type scalar)
     {
         *this = (*this) - scalar;
     }
@@ -329,7 +329,7 @@ public:
     }
 
     // tranpose alias
-    inline Matrix<Type, N, M> T() const
+    Matrix<Type, N, M> T() const
     {
         return transpose();
     }
@@ -373,7 +373,7 @@ public:
         memset(_data, 0, sizeof(_data));
     }
 
-    inline void zero()
+    void zero()
     {
         setZero();
     }
@@ -389,7 +389,7 @@ public:
         }
     }
 
-    inline void setOne()
+    void setOne()
     {
         setAll(1);
     }
@@ -404,12 +404,12 @@ public:
         }
     }
 
-    inline void identity()
+    void identity()
     {
         setIdentity();
     }
 
-    inline void swapRows(size_t a, size_t b)
+    void swapRows(size_t a, size_t b)
     {
         if (a == b) {
             return;
@@ -424,7 +424,7 @@ public:
         }
     }
 
-    inline void swapCols(size_t a, size_t b)
+    void swapCols(size_t a, size_t b)
     {
         if (a == b) {
             return;

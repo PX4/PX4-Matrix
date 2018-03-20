@@ -40,7 +40,7 @@ public:
     }
 
     // inverse alias
-    inline SquareMatrix<Type, M> I() const
+    SquareMatrix<Type, M> I() const
     {
         SquareMatrix<Type, M> i;
         if(inv(*this, i)) {
@@ -53,7 +53,7 @@ public:
 
 
     // inverse alias
-    inline bool I(SquareMatrix<Type, M> &i) const
+    bool I(SquareMatrix<Type, M> &i) const
     {
         return inv(*this, i);
     }

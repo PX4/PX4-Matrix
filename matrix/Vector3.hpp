@@ -65,43 +65,43 @@ public:
      * Override matrix ops so Vector3 type is returned
      */
 
-    inline Vector3 operator+(Vector3 other) const
+    Vector3 operator+(Vector3 other) const
     {
         return Matrix31::operator+(other);
     }
 
-    inline Vector3 operator-(Vector3 other) const
+    Vector3 operator-(Vector3 other) const
     {
         return Matrix31::operator-(other);
     }
 
-    inline Vector3 operator-() const
+    Vector3 operator-() const
     {
         return Matrix31::operator-();
     }
 
-    inline Vector3 operator*(Type scalar) const
+    Vector3 operator*(Type scalar) const
     {
         return Matrix31::operator*(scalar);
     }
 
-    inline Type operator*(Vector3 b) const
+    Type operator*(Vector3 b) const
     {
         return Vector<Type, 3>::operator*(b);
     }
 
-    inline Vector3 operator%(const Matrix31 & b) const {
+    Vector3 operator%(const Matrix31 & b) const {
         return (*this).cross(b);
     }
 
     /**
      * Override vector ops so Vector3 type is returned
      */
-    inline Vector3 unit() const {
+    Vector3 unit() const {
         return Vector3(Vector<Type, 3>::unit());
     }
 
-    inline Vector3 normalized() const {
+    Vector3 normalized() const {
         return unit();
     }
 

@@ -36,13 +36,13 @@ public:
     {
     }
 
-    inline Type operator()(size_t i) const
+    Type operator()(size_t i) const
     {
         const MatrixM1 &v = *this;
         return v(i, 0);
     }
 
-    inline Type &operator()(size_t i)
+    Type &operator()(size_t i)
     {
         MatrixM1 &v = *this;
         return v(i, 0);
@@ -57,12 +57,12 @@ public:
         return r;
     }
 
-    inline Type operator*(const MatrixM1 & b) const {
+    Type operator*(const MatrixM1 & b) const {
         const Vector &a(*this);
         return a.dot(b);
     }
 
-    inline Vector operator*(float b) const {
+    Vector operator*(float b) const {
         return Vector(MatrixM1::operator*(b));
     }
 
@@ -76,11 +76,11 @@ public:
         return a.dot(a);
     }
 
-    inline Type length() const {
+    Type length() const {
         return norm();
     }
 
-    inline void normalize() {
+    void normalize() {
         (*this) /= norm();
     }
 
@@ -96,7 +96,7 @@ public:
         return Vector();
     }
 
-    inline Vector normalized() const {
+    Vector normalized() const {
         return unit();
     }
 

@@ -132,28 +132,28 @@ public:
         *this = Euler(Dcm<Type>(q));
     }
 
-    inline Type phi() const
+    Type phi() const
     {
         return (*this)(0);
     }
-    inline Type theta() const
+    Type theta() const
     {
         return (*this)(1);
     }
-    inline Type psi() const
+    Type psi() const
     {
         return (*this)(2);
     }
 
-    inline Type &phi()
+    Type &phi()
     {
         return (*this)(0);
     }
-    inline Type &theta()
+    Type &theta()
     {
         return (*this)(1);
     }
-    inline Type &psi()
+    Type &psi()
     {
         return (*this)(2);
     }
