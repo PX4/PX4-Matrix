@@ -55,6 +55,12 @@ private:
 
 typedef Scalar<float> Scalarf;
 
+template<typename Type, size_t  M, size_t N>
+Scalar<Type> operator*(const Matrix<Type, 1, N> &A, const Matrix<Type, N, 1> &B)
+{
+    return Scalar<Type> {A * B};
+}
+
 } // namespace matrix
 
 /* vim: set et fenc=utf-8 ff=unix sts=0 sw=4 ts=4 : */
