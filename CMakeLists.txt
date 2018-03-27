@@ -8,6 +8,7 @@ project(matrix CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build type" FORCE)
@@ -23,10 +24,6 @@ option(COV_HTML "Display html for coverage" OFF)
 option(ASAN "Enable address sanitizer" OFF)
 option(UBSAN "Enable undefined behaviour sanitizer" OFF)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-
-include_directories(${CMAKE_SOURCE_DIR})
-
 if(SUPPORT_STDIOSTREAM)
 	add_definitions(-DSUPPORT_STDIOSTREAM)
 endif()
@@ -38,6 +35,57 @@ set(CMAKE_EXE_LINKER_FLAGS_COVERAGE
 	"--coverage -ftest-coverage -lgcov"
 	CACHE STRING "Flags used for linking binaries during coverage builds" FORCE)
 mark_as_advanced(CMAKE_CXX_FLAGS_COVERAGE CMAKE_C_FLAGS_COVERAGE CMAKE_EXE_LINKER_FLAGS_COVERAGE)
+
+
+add_library(library_iface INTERFACE)
+target_compile_definitions(library_iface
+    INTERFACE LIBRARY_HEADER_ONLY
+)
+
+# install and export the library
+install(DIRECTORY
+    matrix_lib/library
+  DESTINATION
+    include/matrix_lib
+)
+install(FILES
+	matrix/AxisAngle.hpp
+	matrix/Dcm.hpp
+	matrix/Euler.hpp
+	matrix/filter.hpp
+	matrix/helper_functions.hpp
+	matrix/integration.hpp
+	matrix/math.hpp
+	matrix/Matrix.hpp
+	matrix/Matrix.hpp.orig
+	matrix/Quaternion.hpp
+	matrix/Scalar.hpp
+	matrix/SquareMatrix.hpp
+	matrix/stdlib_imports.hpp
+	matrix/Vector.hpp
+	matrix/Vector2.hpp
+	matrix/Vector3.hpp
+  DESTINATION
+    include/matrix_lib
+)
+
+install(TARGETS
+    library_iface
+  EXPORT library_targets
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  INCLUDES DESTINATION include
+)
+
+install(EXPORT library_targets
+  NAMESPACE matrix_lib::
+  DESTINATION lib/cmake/matrix_lib
+)
+ 
+install(FILES matrix_lib-config.cmake
+  DESTINATION lib/cmake/matrix_lib
+)
 
 add_compile_options(
 	-pedantic
@@ -164,3 +212,4 @@ set(CPACK_PACKAGE_CONTACT "james.goppert@gmail.com")
 include(CPack)
 
 # vim: set noet fenc=utf-8 ft=cmake ff=unix sts=0 sw=4 ts=4 :
+
