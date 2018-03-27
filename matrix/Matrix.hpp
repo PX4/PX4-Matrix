@@ -297,7 +297,7 @@ public:
 
         for (size_t i = 0; i < M; i++) {
             for (size_t j = 0; j < N; j++) {
-                if (fabs(self(i, j) - other(i, j) > eps) ) {
+                if (fabs(self(i, j) - other(i, j)) > eps) {
                     return false;
                 }
             }
@@ -527,18 +527,7 @@ template<typename Type, size_t  M, size_t N>
 bool isEqual(const Matrix<Type, M, N> &x,
              const Matrix<Type, M, N> &y, const Type eps=1e-4f) {
 
-    bool equal = true;
-
-    for (size_t i = 0; i < M; i++) {
-        for (size_t j = 0; j < N; j++) {
-            if (fabs(x(i, j) - y(i, j)) > eps) {
-                equal = false;
-                break;
-            }
-        }
-        if (equal == false) break;
-    }
-
+    bool equal = (x == y);
 
     if (!equal) {
         static const size_t n = 10*N*M;

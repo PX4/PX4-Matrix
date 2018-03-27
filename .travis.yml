@@ -27,6 +27,7 @@ addons:
     - cmake
     - g++
     - gcc
+    - lcov
 
 install:
   - if [ "${CMAKE_BUILD_TYPE}" = "Coverage" ]; then pip install --user cpp-coveralls; fi
@@ -37,4 +38,5 @@ script:
 
 after_success:
   - if [ "${CMAKE_BUILD_TYPE}" = "Coverage" ]; then cpp-coveralls -i matrix; fi
+  - if [ "${CMAKE_BUILD_TYPE}" = "Coverage" ]; then bash <(curl -s https://codecov.io/bash); fi
 
