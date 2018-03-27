@@ -24,6 +24,8 @@ option(COV_HTML "Display html for coverage" OFF)
 option(ASAN "Enable address sanitizer" OFF)
 option(UBSAN "Enable undefined behaviour sanitizer" OFF)
 
+include_directories(${CMAKE_SOURCE_DIR})
+
 if(SUPPORT_STDIOSTREAM)
 	add_definitions(-DSUPPORT_STDIOSTREAM)
 endif()
@@ -158,7 +160,6 @@ elseif(UBSAN)
 
 	add_compile_options(
 		-fsanitize=undefined
-		-fsanitize=integer
 		-g3
 		-O1
 		-fno-omit-frame-pointer
