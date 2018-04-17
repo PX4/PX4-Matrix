@@ -157,6 +157,18 @@ if(FORMAT)
     add_dependencies(check check_format)
 endif()
 
+add_library(Matrix INTERFACE)
+
+install(TARGETS Matrix EXPORT MatrixTargets
+    INCLUDES DESTINATION include
+    )
+
+install(EXPORT MatrixTargets
+    FILE MatrixTargets.cmake
+    NAMESPACE Matrix::
+    DESTINATION lib/cmake/Matrix
+    )
+
 set(CPACK_PACKAGE_VERSION_MAJOR ${VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${VERSION_PATCH})
