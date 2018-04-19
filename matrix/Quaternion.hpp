@@ -521,6 +521,41 @@ public:
         return Dcm<Type>(*this);
     }
 
+
+    SquareMatrix<Type, 4> get_matrix(const Vector<Type, 3> center) {
+      Type x = this(0), y = this(1), z = this(2), w = this(3);
+
+      /*
+       * Source (http://irrlicht.sourceforge.net/docu/quaternion_8h_source.html#l00349)
+       *
+       * [  1 - 2yy - 2zz     2xy + 2zw       2xz - 2yw       0  ]
+       * [  2xy - 2zw         1 - 2xx + 2zz   2zy + 2xw       0  ]
+       * [  2xz + 2yw         2zy + 2xw       1 - 2xx - 2yy   0  ]
+       * [  center.x          center.y        center.z        1  ]
+       */
+
+      return SquareMatrix<Type, 4>(new Type [
+      1.0f - 2.0f * y * y - 2.0f * z * z,
+          2.0f * x * y + 2.0f * z * w,
+          2.0f * x * z - 2.0f * y * w,
+          0.0f,
+
+          2.0f * x * y - 2.0f * z * w,
+          1.0f - 2.0f * x * x - 2.0f * z * z,
+          2.0f * z * y + 2.0f * x * w,
+          0.0f,
+
+          2.0f * x * z + 2.0f * y * w,
+          2.0f * z * y - 2.0f * x * w,
+          1.0f - 2.0f * x * x - 2.0f * y * y,
+          0.0f,
+
+          center(0),
+          center(1),
+          center(2),
+          1.0f
+      ]);
+    };
 };
 
 typedef Quaternion<float> Quatf;
