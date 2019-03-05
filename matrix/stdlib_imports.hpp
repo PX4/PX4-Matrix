@@ -11,9 +11,13 @@
 
 #include <cmath>
 #include <cstdlib>
-#include <cinttypes>
+#include <inttypes.h>
 
 namespace matrix {
+
+#if !defined(FLT_EPSILON)
+#define FLT_EPSILON     __FLT_EPSILON__
+#endif
 
 #if defined(__PX4_NUTTX)
 /*
@@ -78,8 +82,6 @@ using std::modf;
 
 # if (__cplusplus >= 201103L)
 
-using std::imaxabs;
-using std::imaxdiv;
 using std::remainder;
 using std::remquo;
 using std::fma;

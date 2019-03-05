@@ -87,11 +87,6 @@ public:
         memcpy(dst, _data, sizeof(dst));
     }
 
-    void copyToRaw(Type *dst) const
-    {
-        memcpy(dst, _data, sizeof(_data));
-    }
-
     void copyToColumnMajor(Type (&dst)[M*N]) const
     {
         const Matrix<Type, M, N> &self = *this;
@@ -423,6 +418,11 @@ public:
         setAll(1);
     }
 
+    inline void setNaN()
+    {
+        setAll(NAN);
+    }
+
     void setIdentity()
     {
         setZero();
@@ -520,6 +520,13 @@ template<typename Type, size_t M, size_t N>
 Matrix<Type, M, N> ones() {
     Matrix<Type, M, N> m;
     m.setOne();
+    return m;
+}
+
+template<size_t M, size_t N>
+Matrix<float, M, N> nans() {
+    Matrix<float, M, N> m;
+    m.setNaN();
     return m;
 }
 
