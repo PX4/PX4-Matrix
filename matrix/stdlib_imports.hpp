@@ -19,42 +19,6 @@ namespace matrix {
 #define FLT_EPSILON     __FLT_EPSILON__
 #endif
 
-#if defined(__PX4_NUTTX)
-/*
- * NuttX has no usable C++ math library, so we need to provide the needed definitions here manually.
- */
-#define MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(name)                                   \
-	inline float       name(float x)       { return ::name##f(x); }          \
-	inline double      name(double x)      { return ::name(x); }             \
-	inline long double name(long double x) { return ::name##l(x); }
-
-#define MATRIX_NUTTX_WRAP_MATH_FUN_BINARY(name)                                                    \
-	inline float       name(float x, float y)             { return ::name##f(x, y); }          \
-	inline double      name(double x, double y)           { return ::name(x, y); }             \
-	inline long double name(long double x, long double y) { return ::name##l(x, y); }
-
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(fabs)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(log)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(log10)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(exp)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(sqrt)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(sin)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(cos)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(tan)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(asin)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(acos)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(atan)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(sinh)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(cosh)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(tanh)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(ceil)
-MATRIX_NUTTX_WRAP_MATH_FUN_UNARY(floor)
-
-MATRIX_NUTTX_WRAP_MATH_FUN_BINARY(pow)
-MATRIX_NUTTX_WRAP_MATH_FUN_BINARY(atan2)
-
-#else       // Not NuttX, using the C++ standard library
-
 using std::abs;
 using std::div;
 using std::fabs;
@@ -126,7 +90,6 @@ using std::islessequal;
 using std::islessgreater;
 using std::isunordered;
 
-# endif
 #endif
 
 }
