@@ -27,6 +27,14 @@ int main()
     TEST(isEqual(a.unit(), a.normalized()));
     TEST(isEqual(a*2.0, Vector3f(2, 0, 0)));
 
+    Vector2f g2(1,3);
+    Vector3f g3(7, 11, 17);
+    g3 = g2;
+    TEST(isEqual(g3, Vector3f(1, 3, 17)));
+
+    Vector3f h3(g2);
+    TEST(isEqual(h3, Vector3f(1, 3, 0)));
+
     return 0;
 }
 

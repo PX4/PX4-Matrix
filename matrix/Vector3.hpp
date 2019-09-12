@@ -28,6 +28,7 @@ class Vector3 : public Vector<Type, 3>
 public:
 
     typedef Matrix<Type, 3, 1> Matrix31;
+    typedef Vector<Type, 2> Vector2;
 
     Vector3() = default;
 
@@ -36,7 +37,7 @@ public:
     {
     }
 
-    Vector3(const Type data_[3]) :
+    explicit Vector3(const Type data_[3]) :
         Vector<Type, 3>(data_)
     {
     }
@@ -46,6 +47,13 @@ public:
         v(0) = x;
         v(1) = y;
         v(2) = z;
+    }
+
+    explicit Vector3(const Vector2 & other)
+    {
+        Vector3 &v(*this);
+        v(0) = other(0);
+        v(1) = other(1);
     }
 
     Vector3 cross(const Matrix31 & b) const {
@@ -88,6 +96,14 @@ public:
 
     inline Vector3 operator%(const Matrix31 & b) const {
         return (*this).cross(b);
+    }
+
+    inline Vector3 operator=(Vector2 other)
+    {
+        Vector3 &v(*this);
+        v(0) = other(0);
+        v(1) = other(1);
+        return (*this);
     }
 
     /**
