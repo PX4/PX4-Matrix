@@ -5,6 +5,7 @@ set(tests
     matrixMult
     vectorAssignment
     matrixAssignment
+    map
     matrixScalarMult
     transpose
     vector

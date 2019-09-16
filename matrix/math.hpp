@@ -5,6 +5,7 @@
 #include "dspal_math.h"
 #endif
 #include "Matrix.hpp"
+#include "Map.hpp"
 #include "SquareMatrix.hpp"
 #include "Slice.hpp"
 #include "Vector.hpp"
