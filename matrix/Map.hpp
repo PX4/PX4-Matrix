@@ -33,7 +33,7 @@ public:
 
     Map(Type data[M][N])
     {
-        _data = data;
+        _data = reinterpret_cast<Type*>(data);
     }
 
     Map<Type, M, N> & operator=(const Matrix<Type, M, N> &other)

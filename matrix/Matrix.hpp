@@ -25,7 +25,7 @@ template <typename Type, size_t M>
 class Vector;
 
 template<typename Type, size_t M, size_t N>
-class Matrix;
+class Map;
 
 template <typename Type, size_t P, size_t Q, size_t M, size_t N>
 class Slice;
@@ -63,6 +63,16 @@ public:
         for (size_t i = 0; i < M; i++) {
             for (size_t j = 0; j < N; j++) {
                 self(i, j) = in_slice(i, j);
+            }
+        }
+    }
+
+    Matrix(const Map<Type, M, N>& map)
+    {
+        Matrix<Type, M, N>& self = *this;
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                self(i, j) = map(i, j);
             }
         }
     }
