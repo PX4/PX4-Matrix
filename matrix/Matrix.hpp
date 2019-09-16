@@ -25,6 +25,12 @@ template <typename Type, size_t M>
 class Vector;
 
 template<typename Type, size_t M, size_t N>
+class Matrix;
+
+template <typename Type, size_t P, size_t Q, size_t M, size_t N>
+class Slice;
+
+template<typename Type, size_t M, size_t N>
 class Matrix
 {
 
@@ -48,6 +54,17 @@ public:
     Matrix(const Matrix &other)
     {
         memcpy(_data, other._data, sizeof(_data));
+    }
+
+    template<size_t P, size_t Q>
+    Matrix(const Slice<Type, M, N, P, Q>& in_slice)
+    {
+        Matrix<Type, M, N>& self = *this;
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                self(i, j) = in_slice(i, j);
+            }
+        }
     }
 
     /**
@@ -353,43 +370,46 @@ public:
     }
 
     template<size_t P, size_t Q>
-    Matrix<Type, P, Q> slice(size_t x0, size_t y0) const
+    const Slice<Type, P, Q, M, N> slice(size_t x0, size_t y0) const
     {
-        const Matrix<Type, M, N> &self = *this;
-        Matrix<Type, P, Q> res; //default constructed
-        for (size_t i = 0; i < P; i++) {
-            for (size_t j = 0; j < Q; j++) {
-                res(i, j) = self(i + x0, j + y0);
-            }
-        }
-        return res;
+        return Slice<Type, P, Q, M, N>(x0, y0, this);
     }
 
     template<size_t P, size_t Q>
-    void set(const Matrix<Type, P, Q> &m, size_t x0, size_t y0)
+    Slice<Type, P, Q, M, N> slice(size_t x0, size_t y0)
     {
-        Matrix<Type, M, N> &self = *this;
-        for (size_t i = 0; i < P; i++) {
-            for (size_t j = 0; j < Q; j++) {
-                self(i + x0, j + y0) = m(i, j);
-            }
-        }
+        return Slice<Type, P, Q, M, N>(x0, y0, this);
     }
 
-    void setRow(size_t i, const Matrix<Type, N, 1> &row)
+    const Slice<Type, 1, N, M, N> row(size_t i) const
     {
-        Matrix<Type, M, N> &self = *this;
-        for (size_t j = 0; j < N; j++) {
-            self(i, j) = row(j, 0);
-        }
+        return slice<1, N>(i,0);
     }
 
-    void setCol(size_t j, const Matrix<Type, M, 1> &col)
+    Slice<Type, 1, N, M, N> row(size_t i)
     {
-        Matrix<Type, M, N> &self = *this;
-        for (size_t i = 0; i < M; i++) {
-            self(i, j) = col(i, 0);
-        }
+        return slice<1, N>(i,0);
+    }
+
+    const Slice<Type, M, 1, M, N> col(size_t j) const
+    {
+        return slice<M, 1>(0,j);
+    }
+
+    Slice<Type, M, 1, M, N> col(size_t j)
+    {
+        return slice<M, 1>(0,j);
+    }
+
+    void setRow(size_t i, const Matrix<Type, N, 1> &row_in)
+    {
+        slice<1,N>(i,0) = row_in.transpose();
+    }
+
+
+    void setCol(size_t j, const Matrix<Type, M, 1> &column)
+    {
+        slice<M,1>(0,j) = column;
     }
 
     void setZero()
@@ -517,7 +537,6 @@ public:
         }
         return result;
     }
-
 };
 
 template<typename Type, size_t M, size_t N>

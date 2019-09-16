@@ -19,8 +19,11 @@ class Matrix;
 template <typename Type, size_t M>
 class Vector;
 
-template<typename Type>
+template <typename Type>
 class Dcm;
+
+template <typename Type>
+class Vector2;
 
 template<typename Type>
 class Vector3 : public Vector<Type, 3>
@@ -46,6 +49,11 @@ public:
         v(0) = x;
         v(1) = y;
         v(2) = z;
+    }
+
+    template<size_t P, size_t Q>
+    Vector3(const Slice<Type, 3, 1, P, Q>& slice_in) : Vector<Type, 3>(slice_in)
+    {
     }
 
     Vector3 cross(const Matrix31 & b) const {
@@ -99,6 +107,16 @@ public:
 
     inline Vector3 normalized() const {
         return unit();
+    }
+
+    const Slice<Type, 2, 1, 3, 1> xy() const
+    {
+        return Slice<Type, 2, 1, 3, 1>(0, 0, this);
+    }
+
+    Slice<Type, 2, 1, 3, 1> xy()
+    {
+        return Slice<Type, 2, 1, 3, 1>(0, 0, this);
     }
 
 
