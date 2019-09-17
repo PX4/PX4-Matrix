@@ -97,6 +97,9 @@ int main()
         Matrix<float, 1, 5> K_check(data_4_check);
         TEST(isEqual(K, K_check));
     }
+    Matrix<float, 3, 3> multRes = A.col(1) * A.row(2);
+
+    TEST(isEqual(multRes,A));
     return 0;
 }
 

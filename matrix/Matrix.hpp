@@ -16,6 +16,8 @@
 #include <iomanip>
 #endif // defined(SUPPORT_STDIOSTREAM)
 
+#include <type_traits>
+
 #include "math.hpp"
 
 namespace matrix
@@ -37,6 +39,11 @@ class Matrix
     Type _data[M][N] {};
 
 public:
+
+    using TypeDefinition = Matrix<Type, M, N>;
+    using Scalar = Type;
+    static constexpr size_t Rows = M;
+    static constexpr size_t Cols = N;
 
     // Constructors
     Matrix() = default;
@@ -117,19 +124,13 @@ public:
     template<size_t P>
     Matrix<Type, M, P> operator*(const Matrix<Type, N, P> &other) const
     {
-        const Matrix<Type, M, N> &self = *this;
-        Matrix<Type, M, P> res;
-        res.setZero();
+        return mult(*this, other);
+    }
 
-        for (size_t i = 0; i < M; i++) {
-            for (size_t k = 0; k < P; k++) {
-                for (size_t j = 0; j < N; j++) {
-                    res(i, k) += self(i, j) * other(j, k);
-                }
-            }
-        }
-
-        return res;
+    template<size_t P, size_t Q, size_t R>
+    Matrix<Type, M, P> operator*(const Slice<Type, N, P, Q, R> &other) const
+    {
+        return mult(*this, other);
     }
 
     Matrix<Type, M, N> emult(const Matrix<Type, M, N> &other) const
@@ -554,6 +555,29 @@ Matrix<Type, M, N> operator*(Type scalar, const Matrix<Type, M, N> &other)
 {
     return other * scalar;
 }
+
+template<typename M1, typename M2>
+Matrix<typename M1::Scalar,M1::Rows,M2::Cols> mult(const M1& left, const M2& right) {
+
+    constexpr size_t M = M1::Rows;
+    static_assert(M1::Cols == M2::Rows, "Cannot multiply, wrong matrix dimensions");
+    static_assert(std::is_same<typename M1::Scalar, typename M2::Scalar>::value, "Mismatched matrix scalar types");
+
+    typedef typename M1::Scalar Scalar;
+    constexpr size_t N = M1::Cols;
+    constexpr size_t P = M2::Cols;
+
+    Matrix<Scalar, M, P> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t k = 0; k < P; k++) {
+            for (size_t j = 0; j < N; j++) {
+                res(i, k) += left(i, j) * right(j, k);
+            }
+        }
+    }
+    return res;
+}
+
 
 template<typename Type, size_t  M, size_t N>
 bool isEqual(const Matrix<Type, M, N> &x,
