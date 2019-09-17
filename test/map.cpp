@@ -7,8 +7,8 @@ int main()
 {
 
     float data[9] = {0, 2, 3,
-                        4, 5, 6,
-                        7, 8, 10
+                     4, 5, 6,
+                     7, 8, 10
                     };
     Matrix<float, 3, 3> A(data);
 
@@ -39,7 +39,8 @@ int main()
     A_map4 = A.slice<2,2>(0,0);
 
     float map4_check[4] = {0, 2,
-                           4, 5};
+                           4, 5
+                          };
     Matrix<float, 2, 2> A_check4(map4_check);
     Matrix<float, 2, 2> map_check4(map_data4);
     TEST(isEqual(map_check4, A_check4));
