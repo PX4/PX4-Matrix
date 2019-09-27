@@ -3,6 +3,8 @@
 
 using namespace matrix;
 
+template class matrix::Matrix<float, 3, 5>; // so that we get full coverage results
+
 int main()
 {
     Matrix3f m;

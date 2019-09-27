@@ -158,45 +158,34 @@ public:
 
     Matrix<Type, M, N> operator+(const Matrix<Type, M, N> &other) const
     {
-        Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
+        return add(self, other);
+    }
 
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                res(i, j) = self(i, j) + other(i, j);
-            }
-        }
-
-        return res;
+    template <size_t P, size_t Q>
+    Matrix<Type, M, N> operator+(const Slice<Type, M, N, P, Q> &other) const
+    {
+        const Matrix<Type, M, N> &self = *this;
+        return add(self, other);
     }
 
     Matrix<Type, M, N> operator-(const Matrix<Type, M, N> &other) const
     {
-        Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
+        return subtract(self, other);
+    }
 
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                res(i, j) = self(i, j) - other(i, j);
-            }
-        }
-
-        return res;
+    template <size_t P, size_t Q>
+    Matrix<Type, M, N> operator-(const Slice<Type, M, N, P, Q> &other) const
+    {
+        const Matrix<Type, M, N> &self = *this;
+        return subtract(self, other);
     }
 
     // unary minus
     Matrix<Type, M, N> operator-() const
     {
-        Matrix<Type, M, N> res;
-        const Matrix<Type, M, N> &self = *this;
-
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                res(i, j) = -self(i, j);
-            }
-        }
-
-        return res;
+        return negative(*this);
     }
 
     void operator+=(const Matrix<Type, M, N> &other)
@@ -224,35 +213,17 @@ public:
 
     Matrix<Type, M, N> operator*(Type scalar) const
     {
-        Matrix<Type, M, N> res;
-        const Matrix<Type, M, N> &self = *this;
-
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                res(i, j) = self(i, j) * scalar;
-            }
-        }
-
-        return res;
+        return multScalar(*this, scalar);
     }
 
     inline Matrix<Type, M, N> operator/(Type scalar) const
     {
-        return (*this)*(1/scalar);
+        return (*this) * (1/scalar);
     }
 
     Matrix<Type, M, N> operator+(Type scalar) const
     {
-        Matrix<Type, M, N> res;
-        const Matrix<Type, M, N> &self = *this;
-
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                res(i, j) = self(i, j) + scalar;
-            }
-        }
-
-        return res;
+        return addScalar(*this, scalar);
     }
 
     inline Matrix<Type, M, N> operator-(Type scalar) const
@@ -262,19 +233,12 @@ public:
 
     void operator*=(Type scalar)
     {
-        Matrix<Type, M, N> &self = *this;
-
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                self(i, j) = self(i, j) * scalar;
-            }
-        }
+        *this = (*this) * scalar;
     }
 
     void operator/=(Type scalar)
     {
-        Matrix<Type, M, N> &self = *this;
-        self = self * (Type(1) / scalar);
+        *this = (*this) / scalar;
     }
 
     inline void operator+=(Type scalar)
@@ -563,7 +527,7 @@ Matrix<typename M1::Scalar,M1::Rows,M2::Cols> mult(const M1& left, const M2& rig
     static_assert(M1::Cols == M2::Rows, "Cannot multiply, wrong matrix dimensions");
     static_assert(std::is_same<typename M1::Scalar, typename M2::Scalar>::value, "Mismatched matrix scalar types");
 
-    typedef typename M1::Scalar Scalar;
+    using Scalar = typename M1::Scalar;
     constexpr size_t N = M1::Cols;
     constexpr size_t P = M2::Cols;
 
@@ -573,6 +537,95 @@ Matrix<typename M1::Scalar,M1::Rows,M2::Cols> mult(const M1& left, const M2& rig
             for (size_t j = 0; j < N; j++) {
                 res(i, k) += left(i, j) * right(j, k);
             }
+        }
+    }
+    return res;
+}
+
+template<typename M1, typename M2>
+Matrix<typename M1::Scalar,M1::Rows,M1::Cols> add(const M1& left, const M2& right) {
+
+    static_assert(M1::Rows == M2::Rows, "Cannot add, different matrix dimensions");
+    static_assert(M1::Cols == M2::Cols, "Cannot add, different matrix dimensions");
+    static_assert(std::is_same<typename M1::Scalar, typename M2::Scalar>::value, "Mismatched matrix scalar types");
+
+    using Scalar = typename M1::Scalar;
+    constexpr size_t M = M1::Rows;
+    constexpr size_t N = M1::Cols;
+
+    Matrix<Scalar, M, N> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            res(i, j) += left(i, j) + right(i, j);
+        }
+    }
+    return res;
+}
+
+
+template<typename M1, typename M2>
+Matrix<typename M1::Scalar,M1::Rows,M1::Cols> subtract(const M1& left, const M2& right) {
+
+    static_assert(M1::Rows == M2::Rows, "Cannot subtract, different matrix dimensions");
+    static_assert(M1::Cols == M2::Cols, "Cannot subtract, different matrix dimensions");
+    static_assert(std::is_same<typename M1::Scalar, typename M2::Scalar>::value, "Mismatched matrix scalar types");
+
+    using Scalar = typename M1::Scalar;
+    constexpr size_t M = M1::Rows;
+    constexpr size_t N = M1::Cols;
+
+    Matrix<Scalar, M, N> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            res(i, j) += left(i, j) - right(i, j);
+        }
+    }
+    return res;
+}
+
+template<typename M1, typename Scalar>
+Matrix<typename M1::Scalar,M1::Rows,M1::Cols> addScalar(const M1& left, const Scalar& right) {
+    static_assert(std::is_same<typename M1::Scalar, Scalar>::value, "Mismatched matrix scalar types");
+
+    constexpr size_t M = M1::Rows;
+    constexpr size_t N = M1::Cols;
+
+    Matrix<Scalar, M, N> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            res(i, j) += left(i, j) + right;
+        }
+    }
+    return res;
+}
+
+template<typename M1, typename Scalar>
+Matrix<typename M1::Scalar,M1::Rows,M1::Cols> multScalar(const M1& left, const Scalar& right) {
+    static_assert(std::is_same<typename M1::Scalar, Scalar>::value, "Mismatched matrix scalar types");
+
+    constexpr size_t M = M1::Rows;
+    constexpr size_t N = M1::Cols;
+
+    Matrix<Scalar, M, N> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            res(i, j) += left(i, j) * right;
+        }
+    }
+    return res;
+}
+
+template<typename M1>
+Matrix<typename M1::Scalar,M1::Rows,M1::Cols> negative(const M1& m) {
+
+    using Scalar = typename M1::Scalar;
+    constexpr size_t M = M1::Rows;
+    constexpr size_t N = M1::Cols;
+
+    Matrix<Scalar, M, N> res;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            res(i, j) = -m(i, j);
         }
     }
     return res;

@@ -3,6 +3,9 @@
 
 using namespace matrix;
 
+template class matrix::Slice<float, 2, 3, 4, 5>; // so that we get full coverage results
+
+
 int main()
 {
     const float data[9] = {0, 2, 3,

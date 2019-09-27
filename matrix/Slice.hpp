@@ -73,13 +73,13 @@ public:
     }
 
     // allow assigning vectors to rows, even though vectors are column major
+    template <size_t WIDTH = 1> // nasty hack, don't try this at home kids
     Slice<Type, 1, Q, M, N>& operator=(const Vector<Type, Q>& in_vector)
     {
-        Slice<Type, 1, Q, M, N>& self = *this;
         for (size_t j = 0; j < Q; j++) {
-            self(0, j) = in_vector(j);
+            (*this)(0, j) = in_vector(j);
         }
-        return self;
+        return *this;
     }
 
     void copyTo(Type dst [P*Q]) const
@@ -102,6 +102,51 @@ public:
     Matrix<Type, P, R> operator*(const Matrix<Type, Q, R> &other) const
     {
         return mult(*this, other);
+    }
+
+
+    template<size_t S, size_t T>
+    Matrix<Type, P, Q> operator+(const Slice<Type, P, Q, S, T> &other) const
+    {
+        return add(*this, other);
+    }
+
+    Matrix<Type, P, Q> operator+(const Matrix<Type, P, Q> &other) const
+    {
+        return add(*this, other);
+    }
+
+    template<size_t S, size_t T>
+    void operator+=(const Slice<Type, P, Q, S, T> &other)
+    {
+        *this = *this + other;
+    }
+
+    void operator+=(const Matrix<Type, P, Q> &other)
+    {
+        *this = ((*this) + other);
+    }
+
+    template<size_t S, size_t T>
+    Matrix<Type, P, Q> operator-(const Slice<Type, P, Q, S, T> &other) const
+    {
+        return subtract(*this, other);
+    }
+
+    Matrix<Type, P, Q> operator-(const Matrix<Type, P, Q> &other) const
+    {
+        return subtract(*this, other);
+    }
+
+    template<size_t S, size_t T>
+    void operator-=(const Slice<Type, P, Q, S, T> &other)
+    {
+        *this = *this - other;
+    }
+
+    void operator-=(const Matrix<Type, P, Q> &other)
+    {
+        *this = *this - other;
     }
 
     template<size_t R, size_t S>
