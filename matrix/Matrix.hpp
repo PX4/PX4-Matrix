@@ -35,12 +35,7 @@ class Slice;
 template<typename Type, size_t M, size_t N>
 class Matrix
 {
-
-    Type _data[M][N] {};
-
 public:
-
-    using TypeDefinition = Matrix<Type, M, N>;
     using Scalar = Type;
     static constexpr size_t Rows = M;
     static constexpr size_t Cols = N;
@@ -527,6 +522,11 @@ public:
         }
         return result;
     }
+
+
+private:
+    Type _data[M][N] {};
+
 };
 
 template<typename Type, size_t M, size_t N>

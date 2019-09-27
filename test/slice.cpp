@@ -5,10 +5,10 @@ using namespace matrix;
 
 int main()
 {
-    float data[9] = {0, 2, 3,
-                     4, 5, 6,
-                     7, 8, 10
-                    };
+    const float data[9] = {0, 2, 3,
+                           4, 5, 6,
+                           7, 8, 10
+                          };
     SquareMatrix<float, 3> A(data);
 
     // Test row slicing
@@ -97,9 +97,38 @@ int main()
         Matrix<float, 1, 5> K_check(data_4_check);
         TEST(isEqual(K, K_check));
     }
-    Matrix<float, 3, 3> multRes = A.col(1) * A.row(2);
 
-    TEST(isEqual(multRes,A));
+    Matrix<float, 3, 1> col1 = A.col(1);
+    Matrix<float, 1, 3> row2 = A.row(2);
+    Matrix<float, 3, 3> multCheck = col1 * row2;
+
+    // multiply slice with slice
+    Matrix<float, 3, 3> multResSliceSlice = A.col(1) * A.row(2);
+    TEST(isEqual(multResSliceSlice, multCheck));
+
+    // multiply slice with matrix
+    Matrix<float, 3, 3> multResSliceRow = A.col(1) * row2;
+    TEST(isEqual(multResSliceRow, multCheck));
+
+    // multiply matrix with slice
+    Matrix<float, 3, 3> multResRowSlice = col1 * A.row(2);
+    TEST(isEqual(multResRowSlice, multCheck));
+
+    // check that slice of a slice works for reading
+    const Matrix<float, 3, 3> cm33(data);
+    Matrix<float, 2, 1> topRight = cm33.slice<2,3>(0,0).slice<2,1>(0,2);
+    float top_right_check[2] = {3,6};
+    TEST(isEqual(topRight, Matrix<float, 2, 1>(top_right_check)));
+
+    // check that slice of a slice works for writing
+    Matrix<float, 3, 3> m33(data);
+    m33.slice<2,3>(0,0).slice<2,1>(0,2) = Matrix<float, 2, 1>();
+    const float data_check[9] = {0, 2, 0,
+                                 4, 5, 0,
+                                 7, 8, 10
+                                };
+    TEST(isEqual(m33, Matrix<float, 3, 3>(data_check)));
+
     return 0;
 }
 

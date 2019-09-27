@@ -52,6 +52,12 @@ int main()
         TEST(fabs(array_A[i] - array_column[i]) < eps);
     }
 
+    // Slice copyTo
+    float array_sliceA[6] = {};
+    A.slice<2,3>(0,0).copyTo(array_sliceA);
+    for (size_t i = 0; i < 6; i++) {
+        TEST(fabs(array_sliceA[i] - array_row[i]) < eps);
+    }
     return 0;
 }
 

@@ -26,7 +26,6 @@ template <typename Type, size_t P, size_t Q, size_t M, size_t N>
 class Slice {
 public:
 
-    using TypeDefinition = Slice<Type, P, Q, M, N>;
     using Scalar = Type;
     static constexpr size_t Rows = P;
     static constexpr size_t Cols = Q;
@@ -83,18 +82,24 @@ public:
         return self;
     }
 
-    void copyTo(Type dst [M*N]) const
+    void copyTo(Type dst [P*Q]) const
     {
-        Slice<Type, P, Q, M, N>& self = *this;
+        const Slice<Type, P, Q, M, N>& self = *this;
         for (size_t i = 0; i < P; i++) {
             for (size_t j = 0; j < Q; j++) {
-                dst[i*M + j] = self(i, j);
+                dst[i*Q + j] = self(i, j);
             }
         }
     }
 
     template<size_t R, size_t S, size_t T>
     Matrix<Type, P, R> operator*(const Slice<Type, Q, R, S, T> &other) const
+    {
+        return mult(*this, other);
+    }
+
+    template<size_t R>
+    Matrix<Type, P, R> operator*(const Matrix<Type, Q, R> &other) const
     {
         return mult(*this, other);
     }
@@ -112,7 +117,7 @@ public:
     }
 
 private:
-    size_t _x0, _y0;
+    const size_t _x0, _y0;
     Matrix<Type,M,N>* _data;
 };
 
