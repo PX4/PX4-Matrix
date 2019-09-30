@@ -115,6 +115,16 @@ int main()
                                  7, 8, 10
                                 };
     TEST(isEqual(m33, Matrix<float, 3, 3>(data_check)));
+
+    // longerThan
+    Vector3f v5;
+    v5(0) = 3;
+    v5(1) = 4;
+    v5(2) = 9;
+    TEST(v5.xy().longerThan(4.99f));
+    TEST(!v5.xy().longerThan(5.f));
+    TEST(isEqualF(5.f, v5.xy().norm()));
+
     return 0;
 }
 
