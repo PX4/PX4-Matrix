@@ -86,7 +86,7 @@ public:
         return Slice<Type, R, S, M, N>(x0 + _x0, y0 + _y0, _data);
     }
 
-    void copyTo(Type dst [M*N]) const
+    void copyTo(Type dst[M*N]) const
     {
         const Slice<Type, P, Q, M, N> &self = *this;
 
@@ -97,7 +97,7 @@ public:
         }
     }
 
-    void copyToColumnMajor(Type dst [M*N]) const
+    void copyToColumnMajor(Type dst[M*N]) const
     {
         const Slice<Type, P, Q, M, N> &self = *this;
 
