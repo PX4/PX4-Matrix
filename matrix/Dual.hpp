@@ -6,7 +6,7 @@
  * Based roughly on the methods described in:
  * Automatic Differentiation, C++ Templates and Photogrammetry, by Dan Piponi
  * and
- * Ceres Solver's Jet.h
+ * Ceres Solver's excellent Jet.h
  *
  * @author Julian Kent <julian@auterion.com>
  */
@@ -23,13 +23,16 @@ struct Dual
 {
     static constexpr size_t WIDTH = N;
 
+    Scalar value {};
+    Vector<Scalar, N> derivative;
+
     Dual() = default;
 
     explicit Dual(Scalar v, size_t inputDimension = 65535)
     {
         value = v;
         if (inputDimension < N) {
-            derivative[inputDimension] = Scalar(1);
+            derivative(inputDimension) = Scalar(1);
         }
     }
 
@@ -37,8 +40,45 @@ struct Dual
         value(v), derivative(d)
     {}
 
-    Scalar value {};
-    Vector<Scalar, N> derivative;
+    Dual<Scalar, N>& operator +=(const Dual<Scalar, N>& a)
+    {
+        return (*this = *this + a);
+    }
+
+    Dual<Scalar, N>& operator *=(const Dual<Scalar, N>& a)
+    {
+        return (*this = *this * a);
+    }
+
+    Dual<Scalar, N>& operator -=(const Dual<Scalar, N>& a)
+    {
+        return (*this = *this - a);
+    }
+
+    Dual<Scalar, N>& operator /=(const Dual<Scalar, N>& a)
+    {
+        return (*this = *this / a);
+    }
+
+    Dual<Scalar, N>& operator +=(Scalar a)
+    {
+        return (*this = *this + a);
+    }
+
+    Dual<Scalar, N>& operator -=(Scalar a)
+    {
+        return (*this = *this - a);
+    }
+
+    Dual<Scalar, N>& operator *=(Scalar a)
+    {
+        return (*this = *this * a);
+    }
+
+    Dual<Scalar, N>& operator /=(Scalar a)
+    {
+        return (*this = *this / a);
+    }
 
 };
 
@@ -87,7 +127,7 @@ Dual<Scalar, N> operator+(Scalar a, const Dual<Scalar, N>& b)
 }
 
 template <typename Scalar, size_t N>
-Dual<Scalar, N> operator-(Scalar& a, const Dual<Scalar, N>& b)
+Dual<Scalar, N> operator-(Scalar a, const Dual<Scalar, N>& b)
 {
     return a + (-b);
 }
@@ -121,8 +161,7 @@ Dual<Scalar, N> operator/(const Dual<Scalar, N>& a, const Dual<Scalar, N>& b)
 template <typename Scalar, size_t N>
 Dual<Scalar, N> operator/(const Dual<Scalar, N>& a, Scalar b)
 {
-    const Scalar inv_b = Scalar(1) / b.value;
-    return a * inv_b;
+    return a * (Scalar(1) / b);
 }
 
 template <typename Scalar, size_t N>
@@ -133,6 +172,14 @@ Dual<Scalar, N> operator/(Scalar a, const Dual<Scalar, N>& b)
 }
 
 // basic math
+
+// sqrt
+template <typename Scalar, size_t N>
+Dual<Scalar, N> sqrt(const Dual<Scalar, N>& a)
+{
+    Scalar real = sqrt(a.value);
+    return Dual<Scalar, N>(real, a.derivative * (Scalar(1) / (Scalar(2) * real)));
+}
 
 // abs
 template <typename Scalar, size_t N>
@@ -160,14 +207,6 @@ template <typename Scalar, size_t N>
 Dual<Scalar, N> fmod(const Dual<Scalar, N>& a, Scalar mod)
 {
     return Dual<Scalar, N>(a.value - Scalar(size_t(a.value / mod)) * mod, a.derivative);
-}
-
-// sqrt
-template <typename Scalar, size_t N>
-Dual<Scalar, N> sqrt(const Dual<Scalar, N>& a)
-{
-    Scalar real = sqrt(a.value);
-    return Dual<Scalar, N>(real, a.derivative * (Scalar(1) / (Scalar(2) * real)));
 }
 
 // max
@@ -233,7 +272,7 @@ Dual<Scalar, N> tan(const Dual<Scalar, N>& a)
 template <typename Scalar, size_t N>
 Dual<Scalar, N> asin(const Dual<Scalar, N>& a)
 {
-    Scalar asin_d = Scalar(1)/sqrt(Scalar(1) - a.value * a.value);
+    Scalar asin_d = Scalar(1) / sqrt(Scalar(1) - a.value * a.value);
     return Dual<Scalar, N>(asin(a.value), asin_d * a.derivative);
 }
 
@@ -241,15 +280,15 @@ Dual<Scalar, N> asin(const Dual<Scalar, N>& a)
 template <typename Scalar, size_t N>
 Dual<Scalar, N> acos(const Dual<Scalar, N>& a)
 {
-    Scalar acos_d = -Scalar(1)/sqrt(Scalar(1) - a.value * a.value);
-    return Dual<Scalar, N>(asin(a.value), acos_d * a.derivative);
+    Scalar acos_d = -Scalar(1) / sqrt(Scalar(1) - a.value * a.value);
+    return Dual<Scalar, N>(acos(a.value), acos_d * a.derivative);
 }
 
 // atan
 template <typename Scalar, size_t N>
 Dual<Scalar, N> atan(const Dual<Scalar, N>& a)
 {
-    Scalar atan_d = Scalar(1)/sqrt(Scalar(1) + a.value * a.value);
+    Scalar atan_d = Scalar(1) / (Scalar(1) + a.value * a.value);
     return Dual<Scalar, N>(atan(a.value), atan_d * a.derivative);
 }
 
@@ -258,9 +297,25 @@ template <typename Scalar, size_t N>
 Dual<Scalar, N> atan2(const Dual<Scalar, N>& a, const Dual<Scalar, N>& b)
 {
     // derivative is equal to that of atan(a/b), so substitute a/b into atan and simplify
-    Scalar atan_d = Scalar(1) / sqrt(a.value * a.value + b.value * b.value);
+    Scalar atan_d = Scalar(1) / (a.value * a.value + b.value * b.value);
     return Dual<Scalar, N>(atan2(a.value, b.value), (a.derivative * b.value - a.value * b.derivative) * atan_d);
 }
+
+#if defined(SUPPORT_STDIOSTREAM)
+template<typename Type, size_t N>
+std::ostream& operator<<(std::ostream& os,
+                         const matrix::Dual<Type, N>& dual)
+{
+    os << "[";
+    os << std::setw(10) << dual.value << ";";
+    for (size_t j = 0; j < N; ++j) {
+        os << "\t";
+        os << std::setw(10) << static_cast<double>(dual.derivative(j));
+    }
+    os << "]";
+    return os;
+}
+#endif // defined(SUPPORT_STDIOSTREAM)
 
 }
 
