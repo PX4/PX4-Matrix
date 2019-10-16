@@ -18,6 +18,9 @@
 namespace matrix
 {
 
+template <typename Type, size_t M>
+class Vector;
+
 template <typename Scalar, size_t N>
 struct Dual
 {
@@ -39,6 +42,13 @@ struct Dual
     explicit Dual(Scalar v, const Vector<Scalar, N>& d) :
         value(v), derivative(d)
     {}
+
+    Dual<Scalar, N>& operator=(const Scalar& a)
+    {
+        derivative.setZero();
+        value = a;
+        return *this;
+    }
 
     Dual<Scalar, N>& operator +=(const Dual<Scalar, N>& a)
     {

@@ -11,9 +11,23 @@ bool isEqualAll(Dual<Scalar, N> a, Dual<Scalar, N> b)
 }
 
 template <typename T>
-T testFunction(Vector<T, 3> point) {
+T testFunction(const Vector<T, 3>& point) {
     // function is f(x,y,z) = x^2 + 2xy + 3y^2 + z
-    return point(0)*point(0) + 2.f * point(0) * point(1) + 3.f * point(1) * point(1) + point(2);
+    return point(0)*point(0)
+           + 2.f * point(0) * point(1)
+           + 3.f * point(1) * point(1)
+           + point(2);
+}
+
+template <typename Scalar>
+Vector<Scalar, 3> positionError(const Vector<Scalar, 3>& positionState,
+                                const Vector<Scalar, 3>& velocityStateBody,
+                                const Quaternion<Scalar>& bodyOrientation,
+                                const Vector<Scalar, 3>& positionMeasurement,
+                                Scalar dt
+                               )
+{
+    return positionMeasurement - (positionState +  bodyOrientation.conjugate(velocityStateBody) * dt);
 }
 
 int main()
@@ -189,16 +203,16 @@ int main()
         TEST(isEqualF(asin(c).derivative(0), 1.f/sqrt(1.f - 0.3f*0.3f))); // asin'(x) = 1/sqrt(1-x^2)
 
         TEST(isEqualF(acos(c).value, acos(c.value)));
-        TEST(isEqualF(acos(c).derivative(0), -1.f/sqrt(1.f - 0.3f*0.3f))); // acos'(x) = -1/sqrt(1-x^2
+        TEST(isEqualF(acos(c).derivative(0), -1.f/sqrt(1.f - 0.3f*0.3f))); // acos'(x) = -1/sqrt(1-x^2)
 
         TEST(isEqualF(atan(c).value, atan(c.value)));
-        TEST(isEqualF(atan(c).derivative(0), 1.f/(1.f + 0.3f*0.3f))); // tan'(x) = 1 + tan^2(x)
+        TEST(isEqualF(atan(c).derivative(0), 1.f/(1.f + 0.3f*0.3f))); // tan'(x) = 1 + x^2
     }
 
     {
         // atan2
         TEST(isEqualF(atan2(a, b).value, atan2(a.value, b.value)));
-        TEST(isEqualAll(atan2(a, Dual<float,1>(b.value)), atan(a/b.value)));
+        TEST(isEqualAll(atan2(a, Dual<float,1>(b.value)), atan(a/b.value))); // atan2'(y, x) = atan'(y/x)
     }
 
     {
@@ -231,7 +245,67 @@ int main()
         TEST(isEqualF(dualResult.derivative(0), (floatResult_plusDX - floatResult)/h, 1e-3f));
         TEST(isEqualF(dualResult.derivative(1), (floatResult_plusDY - floatResult)/h, 1e-2f));
 
+    }
 
+    {
+        // jacobian
+        // get residual of x/y/z with partial derivatives of velocity error given x/y/z and vx/vy/vz
+
+        Vector3f direct_error;
+        SquareMatrix3f numerical_jacobian;
+        {
+            Vector3f positionState(5,6,7);
+            Vector3f velocityState(-1,0,1);
+            Quaternionf velocityOrientation(0.2f,-0.1f,0,1);
+            Vector3f positionMeasurement(4.5f, 6.2f, 7.9f);
+            float dt = 0.1f;
+
+            direct_error = positionError(positionState,
+                                         velocityState,
+                                         velocityOrientation,
+                                         positionMeasurement,
+                                         dt);
+            float h = 0.001f;
+            for (size_t i = 0; i < 3; i++)
+            {
+                Vector3f h3;
+                h3(i) = h;
+                numerical_jacobian.col(i) = (positionError(positionState,
+                                             velocityState + h3,
+                                             velocityOrientation,
+                                             positionMeasurement,
+                                             dt)
+                                             - direct_error)/h;
+            }
+        }
+        Vector3f auto_error;
+        SquareMatrix3f auto_jacobian;
+        {
+            using D = Dual<float, 3>;
+            using Vector3f3d = Vector3<D>;
+            Vector3f3d positionState(D(5), D(6), D(7));
+            Vector3f3d velocityState(D(-1), D(0), D(1));
+            Quaternion<D> velocityOrientation(D(0.2f),D(-0.1f),D(0),D(1));
+            Vector3f3d positionMeasurement(D(4.5f), D(6.2f), D(7.9f));
+            D dt(0.1f);
+
+            // get partial derivatives of velocity state:
+            velocityState(0).derivative(0) = 1;
+            velocityState(1).derivative(1) = 1;
+            velocityState(2).derivative(2) = 1;
+
+            Vector3f3d error = positionError(positionState,
+                                             velocityState,
+                                             velocityOrientation,
+                                             positionMeasurement,
+                                             dt);
+            auto_error = Vector3f(error(0).value, error(1).value, error(2).value);
+            auto_jacobian.row(0) = error(0).derivative;
+            auto_jacobian.row(1) = error(1).derivative;
+            auto_jacobian.row(2) = error(2).derivative;
+        }
+        TEST(isEqual(direct_error, auto_error));
+        TEST(isEqual(numerical_jacobian, auto_jacobian, 1e-3f));
 
     }
     return 0;
