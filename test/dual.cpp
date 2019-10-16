@@ -223,8 +223,9 @@ int main()
         dualPoint(0).value = 0.5f;
         dualPoint(1).value = -0.8f;
         dualPoint(2).value = 2.f;
-        dualPoint(0).derivative(0) = 1.f;
-        dualPoint(1).derivative(1) = 1.f;
+
+        // request partial derivatives of x, y
+        setDerivativeIdentity(dualPoint);
 
         Dual<float, 2> dualResult = testFunction(dualPoint);
 
@@ -234,25 +235,30 @@ int main()
         floatPoint(1) = dualPoint(1).value;
         floatPoint(2) = dualPoint(2).value;
         float floatResult = testFunction(floatPoint);
+
         float h = 0.0001f;
         Vector<float, 3> floatPoint_plusDX = floatPoint;
         floatPoint_plusDX(0) += h;
         float floatResult_plusDX = testFunction(floatPoint_plusDX);
+
         Vector<float, 3> floatPoint_plusDY = floatPoint;
         floatPoint_plusDY(1) += h;
         float floatResult_plusDY = testFunction(floatPoint_plusDY);
 
-        TEST(isEqualF(dualResult.derivative(0), (floatResult_plusDX - floatResult)/h, 1e-3f));
-        TEST(isEqualF(dualResult.derivative(1), (floatResult_plusDY - floatResult)/h, 1e-2f));
+        Vector2f numerical_derivative((floatResult_plusDX - floatResult)/h,
+                                      (floatResult_plusDY - floatResult)/h);
+
+        TEST(isEqualF(dualResult.value, floatResult, 0.0f));
+        TEST(isEqual(dualResult.derivative, numerical_derivative, 1e-2f));
 
     }
 
     {
         // jacobian
-        // get residual of x/y/z with partial derivatives of velocity error given x/y/z and vx/vy/vz
+        // get residual of x/y/z with partial derivatives of rotation
 
         Vector3f direct_error;
-        SquareMatrix3f numerical_jacobian;
+        Matrix<float, 3, 4> numerical_jacobian;
         {
             Vector3f positionState(5,6,7);
             Vector3f velocityState(-1,0,1);
@@ -266,45 +272,42 @@ int main()
                                          positionMeasurement,
                                          dt);
             float h = 0.001f;
-            for (size_t i = 0; i < 3; i++)
+            for (size_t i = 0; i < 4; i++)
             {
-                Vector3f h3;
-                h3(i) = h;
+                Quaternion<float> h4 = velocityOrientation;
+                h4(i) += h;
                 numerical_jacobian.col(i) = (positionError(positionState,
-                                             velocityState + h3,
-                                             velocityOrientation,
+                                             velocityState,
+                                             h4,
                                              positionMeasurement,
                                              dt)
                                              - direct_error)/h;
             }
         }
         Vector3f auto_error;
-        SquareMatrix3f auto_jacobian;
+        Matrix<float, 3, 4> auto_jacobian;
         {
-            using D = Dual<float, 3>;
-            using Vector3f3d = Vector3<D>;
-            Vector3f3d positionState(D(5), D(6), D(7));
-            Vector3f3d velocityState(D(-1), D(0), D(1));
-            Quaternion<D> velocityOrientation(D(0.2f),D(-0.1f),D(0),D(1));
-            Vector3f3d positionMeasurement(D(4.5f), D(6.2f), D(7.9f));
-            D dt(0.1f);
+            using D4 = Dual<float, 4>;
+            using Vector3d4 = Vector3<D4>;
+            Vector3d4 positionState(D4(5), D4(6), D4(7));
+            Vector3d4 velocityState(D4(-1), D4(0), D4(1));
+            Quaternion<D4> velocityOrientation(D4(0.2f),D4(-0.1f),D4(0),D4(1));
+            Vector3d4 positionMeasurement(D4(4.5f), D4(6.2f), D4(7.9f));
+            D4 dt(0.1f);
 
-            // get partial derivatives of velocity state:
-            velocityState(0).derivative(0) = 1;
-            velocityState(1).derivative(1) = 1;
-            velocityState(2).derivative(2) = 1;
+            // request partial derivatives of velocity state:
+            setDerivativeIdentity(velocityOrientation);
 
-            Vector3f3d error = positionError(positionState,
+            Vector3d4 error = positionError(positionState,
                                              velocityState,
                                              velocityOrientation,
                                              positionMeasurement,
                                              dt);
-            auto_error = Vector3f(error(0).value, error(1).value, error(2).value);
-            auto_jacobian.row(0) = error(0).derivative;
-            auto_jacobian.row(1) = error(1).derivative;
-            auto_jacobian.row(2) = error(2).derivative;
+            auto_error = real(error);
+            auto_jacobian = derivative(error);
         }
-        TEST(isEqual(direct_error, auto_error));
+        std::cout << auto_jacobian << std::endl;
+        TEST(isEqual(direct_error, auto_error, 0.0f));
         TEST(isEqual(numerical_jacobian, auto_jacobian, 1e-3f));
 
     }

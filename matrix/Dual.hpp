@@ -311,6 +311,36 @@ Dual<Scalar, N> atan2(const Dual<Scalar, N>& a, const Dual<Scalar, N>& b)
     return Dual<Scalar, N>(atan2(a.value, b.value), (a.derivative * b.value - a.value * b.derivative) * atan_d);
 }
 
+template <typename Scalar, size_t M, size_t N>
+Matrix<Scalar, M, N> derivative(const Matrix<Dual<Scalar, N>, M, 1>& input)
+{
+    Matrix<Scalar, M, N> jac;
+    for (size_t i = 0; i < M; i++) {
+        jac.row(i) = input(i, 0).derivative;
+    }
+    return jac;
+}
+
+template <typename Scalar, size_t M, size_t N, size_t D>
+Matrix<Scalar, M, N> real(const Matrix<Dual<Scalar, D>, M, N>& input)
+{
+    Matrix<Scalar, M, N> r;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            r(i,j) = input(i,j).value;
+        }
+    }
+    return r;
+}
+
+template <typename Scalar, size_t M, size_t N>
+void setDerivativeIdentity(Matrix<Dual<Scalar, N>, M, 1>& input)
+{
+    for (size_t i = 0; i < M && i < N; i++) {
+        input(i, 0).derivative(i) = Scalar(1);
+    }
+}
+
 #if defined(SUPPORT_STDIOSTREAM)
 template<typename Type, size_t N>
 std::ostream& operator<<(std::ostream& os,
