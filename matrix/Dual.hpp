@@ -311,7 +311,7 @@ Dual<Scalar, N> atan2(const Dual<Scalar, N>& a, const Dual<Scalar, N>& b)
     return Dual<Scalar, N>(atan2(a.value, b.value), (a.derivative * b.value - a.value * b.derivative) * atan_d);
 }
 
-// retrieve the derivative elements of a vector into
+// retrieve the derivative elements of a vector of Duals into a matrix
 template <typename Scalar, size_t M, size_t N>
 Matrix<Scalar, M, N> collectDerivatives(const Matrix<Dual<Scalar, N>, M, 1>& input)
 {
@@ -322,6 +322,7 @@ Matrix<Scalar, M, N> collectDerivatives(const Matrix<Dual<Scalar, N>, M, 1>& inp
     return jac;
 }
 
+// retrieve the real (non-derivative) elements of a matrix of Duals into an equally sized matrix
 template <typename Scalar, size_t M, size_t N, size_t D>
 Matrix<Scalar, M, N> collectReals(const Matrix<Dual<Scalar, D>, M, N>& input)
 {
