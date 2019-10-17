@@ -311,8 +311,9 @@ Dual<Scalar, N> atan2(const Dual<Scalar, N>& a, const Dual<Scalar, N>& b)
     return Dual<Scalar, N>(atan2(a.value, b.value), (a.derivative * b.value - a.value * b.derivative) * atan_d);
 }
 
+// retrieve the derivative elements of a vector into
 template <typename Scalar, size_t M, size_t N>
-Matrix<Scalar, M, N> derivative(const Matrix<Dual<Scalar, N>, M, 1>& input)
+Matrix<Scalar, M, N> collectDerivatives(const Matrix<Dual<Scalar, N>, M, 1>& input)
 {
     Matrix<Scalar, M, N> jac;
     for (size_t i = 0; i < M; i++) {
@@ -322,7 +323,7 @@ Matrix<Scalar, M, N> derivative(const Matrix<Dual<Scalar, N>, M, 1>& input)
 }
 
 template <typename Scalar, size_t M, size_t N, size_t D>
-Matrix<Scalar, M, N> real(const Matrix<Dual<Scalar, D>, M, N>& input)
+Matrix<Scalar, M, N> collectReals(const Matrix<Dual<Scalar, D>, M, N>& input)
 {
     Matrix<Scalar, M, N> r;
     for (size_t i = 0; i < M; i++) {
@@ -331,14 +332,6 @@ Matrix<Scalar, M, N> real(const Matrix<Dual<Scalar, D>, M, N>& input)
         }
     }
     return r;
-}
-
-template <typename Scalar, size_t M, size_t N>
-void setDerivativeIdentity(Matrix<Dual<Scalar, N>, M, 1>& input)
-{
-    for (size_t i = 0; i < M && i < N; i++) {
-        input(i, 0).derivative(i) = Scalar(1);
-    }
 }
 
 #if defined(SUPPORT_STDIOSTREAM)

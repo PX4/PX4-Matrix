@@ -219,21 +219,15 @@ int main()
         // partial derivatives
         // function is f(x,y,z) = x^2 + 2xy + 3y^2 + z, we need with respect to d/dx and d/dy at the point (0.5, -0.8, 2)
 
-        Vector<Dual<float, 2>, 3> dualPoint;
-        dualPoint(0).value = 0.5f;
-        dualPoint(1).value = -0.8f;
-        dualPoint(2).value = 2.f;
+        using D = Dual<float, 2>;
 
-        // request partial derivatives of x, y
-        setDerivativeIdentity(dualPoint);
+        // set our starting point, requesting partial derivatives of x and y in column 0 and 1
+        Vector3<D> dualPoint(D(0.5f, 0), D(-0.8f, 1), D(2.f));
 
         Dual<float, 2> dualResult = testFunction(dualPoint);
 
         // compare to a numerical derivative:
-        Vector<float, 3> floatPoint;
-        floatPoint(0) = dualPoint(0).value;
-        floatPoint(1) = dualPoint(1).value;
-        floatPoint(2) = dualPoint(2).value;
+        Vector<float, 3> floatPoint = collectReals(dualPoint);
         float floatResult = testFunction(floatPoint);
 
         float h = 0.0001f;
@@ -291,22 +285,23 @@ int main()
             using Vector3d4 = Vector3<D4>;
             Vector3d4 positionState(D4(5), D4(6), D4(7));
             Vector3d4 velocityState(D4(-1), D4(0), D4(1));
-            Quaternion<D4> velocityOrientation(D4(0.2f),D4(-0.1f),D4(0),D4(1));
+
+            // request partial derivatives of velocity orientation
+            // by setting these variables' derivatives in corresponding columns [0...3]
+            Quaternion<D4> velocityOrientation(D4(0.2f, 0),D4(-0.1f, 1),D4(0, 2),D4(1, 3));
+
             Vector3d4 positionMeasurement(D4(4.5f), D4(6.2f), D4(7.9f));
             D4 dt(0.1f);
 
-            // request partial derivatives of velocity state:
-            setDerivativeIdentity(velocityOrientation);
 
             Vector3d4 error = positionError(positionState,
-                                             velocityState,
-                                             velocityOrientation,
-                                             positionMeasurement,
-                                             dt);
-            auto_error = real(error);
-            auto_jacobian = derivative(error);
+                                            velocityState,
+                                            velocityOrientation,
+                                            positionMeasurement,
+                                            dt);
+            auto_error = collectReals(error);
+            auto_jacobian = collectDerivatives(error);
         }
-        std::cout << auto_jacobian << std::endl;
         TEST(isEqual(direct_error, auto_error, 0.0f));
         TEST(isEqual(numerical_jacobian, auto_jacobian, 1e-3f));
 
