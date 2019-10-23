@@ -41,7 +41,15 @@ public:
     // Constructors
     Matrix()
     {
+#ifdef  __STDC_IEC_559__
         memset(_data, 0, sizeof(_data)); //workaround for GCC 4.8 bug, don't use {} for array init
+#else
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                _data[i][j] = Type{};
+            }
+        }
+#endif
     }
 
     explicit Matrix(const Type data_[M*N])
