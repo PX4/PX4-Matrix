@@ -34,12 +34,15 @@ template<typename Type, size_t M, size_t N>
 class Matrix
 {
 
-    Type _data[M][N] {};
+    Type _data[M][N];
 
 public:
 
     // Constructors
-    Matrix() = default;
+    Matrix()
+    {
+        memset(_data, 0, sizeof(_data)); //workaround for GCC 4.8 bug, don't use {} for array init
+    }
 
     explicit Matrix(const Type data_[M*N])
     {
