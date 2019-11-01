@@ -1,0 +1,127 @@
+/**
+ * @file pseudoinverse.hxx
+ *
+ * Implementation of matrix pseudo inverse
+ *
+ * @author Julien Lecoeur <julien.lecoeur@gmail.com>
+ */
+
+
+
+/**
+ * Full rank Cholesky factorization of A
+ */
+template<typename Type, size_t N>
+SquareMatrix<Type, N> full_rank_cholesky(const SquareMatrix<Type, N> & A,
+                               size_t& rank)
+{
+    // Compute 
+    // dA = np.diag(A)
+    // tol = np.min(dA[dA > 0]) * 1e-9
+    Vector<Type, N> d = A.diag();
+    Type tol = d.max();
+    for (size_t k = 0; k < N; k++) {
+        if ((d(k) > 0) && (d(k) < tol)) {
+            tol = d(k);
+        }
+    }
+    tol /= 1000000000;
+
+    Matrix<Type, N, N> L;
+
+    size_t r = 0;
+    for (size_t k = 0; k < N; k++) {
+
+        if (r == 0) {
+            for (size_t i = k; i < N; i++) {
+                L(i, r) = A(i, k);
+            }
+
+        } else {
+            for (size_t i = k; i < N; i++) {
+                // Compute LL = L[k:n, :r] * L[k, :r].T
+                Type LL = Type();
+                for (size_t j = 0; j < r; j++) {
+                    LL += L(i, j) * L(k, j);
+                }
+                L(i, r) = A(i, k) - LL;
+            }
+        }
+
+        if (L(k, r) > tol) {
+            L(k, r) = sqrt(L(k, r));
+
+            if (k < N - 1) {
+                for (size_t i = k + 1; i < N; i++) {
+                    L(i, r) = L(i, r) / L(k, r);
+                }
+            }
+
+            r = r + 1;
+        }
+    }
+
+    // Return rank
+    rank = r;
+
+    return L;
+}
+
+template< typename Type, size_t M, size_t N, size_t R>
+class Geninv_impl
+{
+public:
+    static Matrix<Type, N, M> geninv_M(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
+    {
+        if (rank < R) {
+            // Recursive call
+            return Geninv_impl<Type, M, N, R - 1>::geninv_M(G, L, rank);
+        
+        } else if (rank > R) {
+            // Error
+            return Matrix<Type, N, M>();
+        
+        } else {
+            // R == rank
+            Matrix<Type, M, R> LL = L. template slice<M, R>(0, 0);
+            SquareMatrix<Type, R> X = inv(SquareMatrix<Type, R>(LL.transpose() * LL));
+            return G.transpose() * LL * X * X * LL.transpose();
+        
+        }
+    }
+
+    static Matrix<Type, N, M> geninv_N(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
+    {
+        if (rank < R) {
+            // Recursive call
+            return Geninv_impl<Type, M, N, R - 1>::geninv_N(G, L, rank);
+        
+        } else if (rank > R) {
+            // Error
+            return Matrix<Type, N, M>();
+        
+        } else {
+            // R == rank
+            Matrix<Type, N, R> LL = L. template slice<N, R>(0, 0);
+            SquareMatrix<Type, R> X = inv(SquareMatrix<Type, R>(LL.transpose() * LL));
+            return LL * X * X * LL.transpose() * G.transpose();
+        
+        }
+    }
+};
+
+// Partial template specialisation for R==0, allows to stop recursion in geninv_M and geninv_N
+template< typename Type, size_t M, size_t N>
+class Geninv_impl<Type, M, N, 0>
+{
+public:
+    static Matrix<Type, N, M> geninv_M(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
+    {
+        return Matrix<Type, N, M>();
+    }
+
+    static Matrix<Type, N, M> geninv_N(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
+    {
+        return Matrix<Type, N, M>();
+    }
+};
