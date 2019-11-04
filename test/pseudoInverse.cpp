@@ -79,10 +79,10 @@ int main()
     Matrix<float, 2, 2> L;
     Matrix<float, 2, 3> GM;
     Matrix<float, 3, 2> retM_check;
-    Matrix<float, 3, 2> retM = Geninv_impl<float, 2, 3, 0>::geninv_M(GM, L, 5);
+    Matrix<float, 3, 2> retM = GeninvImpl<float, 2, 3, 0>::genInvUnderdetermined(GM, L, 5);
     Matrix<float, 3, 2> GN;
     Matrix<float, 2, 3> retN_check;
-    Matrix<float, 2, 3> retN = Geninv_impl<float, 3, 2, 0>::geninv_N(GN, L, 5);
+    Matrix<float, 2, 3> retN = GeninvImpl<float, 3, 2, 0>::genInvOverdetermined(GN, L, 5);
     TEST((retM - retM_check).abs().max() < 1e-5);
     TEST((retN - retN_check).abs().max() < 1e-5);
 

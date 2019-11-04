@@ -12,7 +12,7 @@
  * Full rank Cholesky factorization of A
  */
 template<typename Type, size_t N>
-SquareMatrix<Type, N> full_rank_cholesky(const SquareMatrix<Type, N> & A,
+SquareMatrix<Type, N> fullRankCholesky(const SquareMatrix<Type, N> & A,
                                size_t& rank)
 {
     // Compute 
@@ -68,14 +68,14 @@ SquareMatrix<Type, N> full_rank_cholesky(const SquareMatrix<Type, N> & A,
 }
 
 template< typename Type, size_t M, size_t N, size_t R>
-class Geninv_impl
+class GeninvImpl
 {
 public:
-    static Matrix<Type, N, M> geninv_M(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
+    static Matrix<Type, N, M> genInvUnderdetermined(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
     {
         if (rank < R) {
             // Recursive call
-            return Geninv_impl<Type, M, N, R - 1>::geninv_M(G, L, rank);
+            return GeninvImpl<Type, M, N, R - 1>::genInvUnderdetermined(G, L, rank);
         
         } else if (rank > R) {
             // Error
@@ -90,11 +90,11 @@ public:
         }
     }
 
-    static Matrix<Type, N, M> geninv_N(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
+    static Matrix<Type, N, M> genInvOverdetermined(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
     {
         if (rank < R) {
             // Recursive call
-            return Geninv_impl<Type, M, N, R - 1>::geninv_N(G, L, rank);
+            return GeninvImpl<Type, M, N, R - 1>::genInvOverdetermined(G, L, rank);
         
         } else if (rank > R) {
             // Error
@@ -110,17 +110,17 @@ public:
     }
 };
 
-// Partial template specialisation for R==0, allows to stop recursion in geninv_M and geninv_N
+// Partial template specialisation for R==0, allows to stop recursion in genInvUnderdetermined and genInvOverdetermined
 template< typename Type, size_t M, size_t N>
-class Geninv_impl<Type, M, N, 0>
+class GeninvImpl<Type, M, N, 0>
 {
 public:
-    static Matrix<Type, N, M> geninv_M(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
+    static Matrix<Type, N, M> genInvUnderdetermined(const Matrix<Type, M, N> & G, const Matrix<Type, M, M> & L, size_t rank)
     {
         return Matrix<Type, N, M>();
     }
 
-    static Matrix<Type, N, M> geninv_N(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
+    static Matrix<Type, N, M> genInvOverdetermined(const Matrix<Type, M, N> & G, const Matrix<Type, N, N> & L, size_t rank)
     {
         return Matrix<Type, N, M>();
     }

@@ -17,12 +17,12 @@ namespace matrix
  * Full rank Cholesky factorization of A
  */
 template<typename Type, size_t N>
-SquareMatrix<Type, N> full_rank_cholesky(const SquareMatrix<Type, N> & A, size_t& rank);
+SquareMatrix<Type, N> fullRankCholesky(const SquareMatrix<Type, N> & A, size_t& rank);
 
 /**
  * Geninv implementation detail
  */
-template<typename Type, size_t M, size_t N, size_t R> class Geninv_impl;
+template<typename Type, size_t M, size_t N, size_t R> class GeninvImpl;
 
 /**
  * Geninv
@@ -36,15 +36,15 @@ Matrix<Type, N, M> geninv(const Matrix<Type, M, N> & G)
     size_t rank;
     if (M <= N) {
         SquareMatrix<Type, M> A = G * G.transpose();
-        SquareMatrix<Type, M> L = full_rank_cholesky(A, rank);
+        SquareMatrix<Type, M> L = fullRankCholesky(A, rank);
 
-        return Geninv_impl<Type, M, N, M>::geninv_M(G, L, rank);
+        return GeninvImpl<Type, M, N, M>::genInvUnderdetermined(G, L, rank);
 
     } else {
         SquareMatrix<Type, N> A = G.transpose() * G;
-        SquareMatrix<Type, N> L = full_rank_cholesky(A, rank);
+        SquareMatrix<Type, N> L = fullRankCholesky(A, rank);
 
-        return Geninv_impl<Type, M, N, N>::geninv_N(G, L, rank);
+        return GeninvImpl<Type, M, N, N>::genInvOverdetermined(G, L, rank);
     }
 }
 
