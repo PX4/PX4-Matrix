@@ -11,11 +11,23 @@
 /**
  * Full rank Cholesky factorization of A
  */
+template<typename Type>
+void fullRankCholeskyTolerance(Type &tol)
+{
+    tol /= 1000000000;
+}
+
+template<> inline
+void fullRankCholeskyTolerance<double>(double &tol)
+{
+    tol /= 1000000000000000000.0;
+}
+
 template<typename Type, size_t N>
 SquareMatrix<Type, N> fullRankCholesky(const SquareMatrix<Type, N> & A,
                                size_t& rank)
 {
-    // Compute 
+    // Compute
     // dA = np.diag(A)
     // tol = np.min(dA[dA > 0]) * 1e-9
     Vector<Type, N> d = A.diag();
@@ -25,7 +37,7 @@ SquareMatrix<Type, N> fullRankCholesky(const SquareMatrix<Type, N> & A,
             tol = d(k);
         }
     }
-    tol /= 1000000000;
+    fullRankCholeskyTolerance<Type>(tol);
 
     Matrix<Type, N, N> L;
 
@@ -76,17 +88,17 @@ public:
         if (rank < R) {
             // Recursive call
             return GeninvImpl<Type, M, N, R - 1>::genInvUnderdetermined(G, L, rank);
-        
+
         } else if (rank > R) {
             // Error
             return Matrix<Type, N, M>();
-        
+
         } else {
             // R == rank
             Matrix<Type, M, R> LL = L. template slice<M, R>(0, 0);
             SquareMatrix<Type, R> X = inv(SquareMatrix<Type, R>(LL.transpose() * LL));
             return G.transpose() * LL * X * X * LL.transpose();
-        
+
         }
     }
 
@@ -95,17 +107,17 @@ public:
         if (rank < R) {
             // Recursive call
             return GeninvImpl<Type, M, N, R - 1>::genInvOverdetermined(G, L, rank);
-        
+
         } else if (rank > R) {
             // Error
             return Matrix<Type, N, M>();
-        
+
         } else {
             // R == rank
             Matrix<Type, N, R> LL = L. template slice<N, R>(0, 0);
             SquareMatrix<Type, R> X = inv(SquareMatrix<Type, R>(LL.transpose() * LL));
             return LL * X * X * LL.transpose() * G.transpose();
-        
+
         }
     }
 };
