@@ -580,6 +580,126 @@ bool isEqual(const Matrix<Type, M, N> &x,
     return true;
 }
 
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> min(const Matrix<Type, M, N> &x, const Type scalar_upper_bound) {
+    Matrix<Type,M,N> m;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if(x(i,j) > scalar_upper_bound) {
+                m(i,j) = scalar_upper_bound;
+            } else {
+                m(i,j) = x(i,j);
+            }
+        }
+    }
+    return m;
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> min(const Type scalar_upper_bound, const Matrix<Type, M, N> &x) {
+    return min(x, scalar_upper_bound);
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> min(const Matrix<Type, M, N> &x1, const Matrix<Type, M, N> &x2) {
+    Matrix<Type,M,N> m;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if(x2(i,j) > x1(i,j)) {
+                m(i,j) = x1(i,j);
+            } else {
+                m(i,j) = x2(i,j);
+            }
+        }
+    }
+    return m;
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> max(const Matrix<Type, M, N> &x, const Type scalar_lower_bound) {
+    Matrix<Type,M,N> m;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if(x(i,j) < scalar_lower_bound) {
+                m(i,j) = scalar_lower_bound;
+            } else {
+                m(i,j) = x(i,j);
+            }
+        }
+    }
+    return m;
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> max(const Type scalar_lower_bound, const Matrix<Type, M, N> &x) {
+    return max(x, scalar_lower_bound);
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> max(const Matrix<Type, M, N> &x1, const Matrix<Type, M, N> &x2) {
+    Matrix<Type,M,N> m;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if(x2(i,j) < x1(i,j)) {
+                m(i,j) = x1(i,j);
+            } else {
+                m(i,j) = x2(i,j);
+            }
+        }
+    }
+    return m;
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> constrain(const Matrix<Type, M, N> &x,
+                             const Type scalar_lower_bound,
+                             const Type scalar_upper_bound) {
+    Matrix<Type,M,N> m;
+    if(scalar_lower_bound > scalar_upper_bound) {
+        m.setNaN();
+    } else {
+        for (size_t i = 0; i < M; i++) {
+            for (size_t j = 0; j < N; j++) {
+                if(x(i,j) < scalar_lower_bound) {
+                    m(i,j) = scalar_lower_bound;
+                } else if(x(i,j) > scalar_upper_bound) {
+                    m(i,j) = scalar_upper_bound;
+                } else {
+                    m(i,j) = x(i,j);
+                }
+            }
+        }
+    }
+    return m;
+}
+
+template<typename Type, size_t  M, size_t N>
+Matrix<Type, M, N> constrain(const Matrix<Type, M, N> &x,
+                             const Matrix<Type, M, N> &x_lower_bound,
+                             const Matrix<Type, M, N> &x_upper_bound) {
+    Matrix<Type,M,N> m;
+    bool should_be_nan = false;
+    for (size_t i = 0; i < M; i++) {
+        for (size_t j = 0; j < N; j++) {
+            if(x_lower_bound(i,j) > x_upper_bound(i,j)) {
+                should_be_nan = true;
+            } else {
+                if(x(i,j) < x_lower_bound(i,j)) {
+                    m(i,j) = x_lower_bound(i,j);
+                } else if(x(i,j) > x_upper_bound(i,j)) {
+                    m(i,j) = x_upper_bound(i,j);
+                } else {
+                    m(i,j) = x(i,j);
+                }
+            }
+        }
+    }
+    if(should_be_nan) {
+        m.setNaN();
+    }
+    return m;
+}
+
 #if defined(SUPPORT_STDIOSTREAM)
 template<typename Type, size_t  M, size_t N>
 std::ostream& operator<<(std::ostream& os,
