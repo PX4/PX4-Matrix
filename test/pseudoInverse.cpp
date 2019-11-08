@@ -51,11 +51,9 @@ int main()
     Matrix<float, n_large, n_large - 1> A_large;
     A_large.setIdentity();
     Matrix<float, n_large - 1, n_large> A_large_I;
-    A_large_I.setZero();
 
     for (size_t i = 0; i < n_large; i++) {
         A_large_I = geninv(A_large);
-        A_large_I.print();
         TEST(isEqual(A_large, A_large_I.T()));
     }
 
@@ -111,12 +109,19 @@ int main()
     Matrix<float, 2, 2> L;
     Matrix<float, 2, 3> GM;
     Matrix<float, 3, 2> retM_check;
-    Matrix<float, 3, 2> retM = GeninvImpl<float, 2, 3, 0>::genInvUnderdetermined(GM, L, 5);
+    Matrix<float, 3, 2> retM0 = GeninvImpl<float, 2, 3, 0>::genInvUnderdetermined(GM, L, 5);
     Matrix<float, 3, 2> GN;
     Matrix<float, 2, 3> retN_check;
-    Matrix<float, 2, 3> retN = GeninvImpl<float, 3, 2, 0>::genInvOverdetermined(GN, L, 5);
-    TEST((retM - retM_check).abs().max() < 1e-5);
-    TEST((retN - retN_check).abs().max() < 1e-5);
+    Matrix<float, 2, 3> retN0 = GeninvImpl<float, 3, 2, 0>::genInvOverdetermined(GN, L, 5);
+    TEST((retM0 - retM_check).abs().max() < 1e-5);
+    TEST((retN0 - retN_check).abs().max() < 1e-5);
+
+    Matrix<float, 3, 2> retM1 = GeninvImpl<float, 2, 3, 1>::genInvUnderdetermined(GM, L, 5);
+    Matrix<float, 2, 3> retN1 = GeninvImpl<float, 3, 2, 1>::genInvOverdetermined(GN, L, 5);
+    TEST((retM1 - retM_check).abs().max() < 1e-5);
+    TEST((retN1 - retN_check).abs().max() < 1e-5);
+
+    TEST(static_cast<double>(fullRankCholeskyTolerance<float>()) < fullRankCholeskyTolerance<double>());
 
     return 0;
 }
