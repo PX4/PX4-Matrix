@@ -121,7 +121,11 @@ int main()
     TEST((retM1 - retM_check).abs().max() < 1e-5);
     TEST((retN1 - retN_check).abs().max() < 1e-5);
 
-    TEST(static_cast<double>(fullRankCholeskyTolerance<float>()) < fullRankCholeskyTolerance<double>());
+    float float_scale = 1.f;
+    fullRankCholeskyTolerance(float_scale);
+    double double_scale = 1.;
+    fullRankCholeskyTolerance(double_scale);
+    TEST(static_cast<double>(float_scale) > double_scale);
 
     return 0;
 }
