@@ -75,6 +75,38 @@ int main()
     SquareMatrix<float, 3> A2_I_check(data2_check);
     TEST((A2_I - A2_I_check).abs().max() < 1e-5);
 
+    // Mock-up effectiveness matrix
+    const float B_quad_w[6][16] = {
+        {-0.5717536f,  0.43756646f,  0.5717536f, -0.43756646f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f},
+        { 0.35355328f, -0.35355328f,  0.35355328f, -0.35355328f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f},
+        { 0.28323701f,  0.28323701f, -0.28323701f, -0.28323701f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f},
+        { 0.f,  0.f,  0.f,  0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f},
+        { 0.f,  0.f,  0.f,  0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f},
+        {-0.25f, -0.25f, -0.25f, -0.25f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f, 0.f}
+    };
+    Matrix<float, 6, 16> B = Matrix<float, 6, 16>(B_quad_w);
+    const float A_quad_w[16][6] = {
+        { -0.495383f,  0.707107f,  0.765306f,  0.0f, 0.0f, -1.000000f },
+        {  0.495383f, -0.707107f,  1.000000f,  0.0f, 0.0f, -1.000000f },
+        {  0.495383f,  0.707107f, -0.765306f,  0.0f, 0.0f, -1.000000f },
+        { -0.495383f, -0.707107f, -1.000000f,  0.0f, 0.0f, -1.000000f },
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+        { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f}
+    };
+    Matrix<float, 16, 6> A_check = Matrix<float, 16, 6>(A_quad_w);
+    Matrix<float, 16, 6> A = geninv(B);
+    TEST((A - A_check).abs().max() < 1e-5);
+
     // Test error case with erroneous rank in internal impl functions
     Matrix<float, 2, 2> L;
     Matrix<float, 2, 3> GM;
