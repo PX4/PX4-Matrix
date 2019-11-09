@@ -69,9 +69,15 @@ int main()
     };
 
     SquareMatrix<float, 3> A2(data2);
-    SquareMatrix<float, 3> A2_I = inv(A2);
+    SquareMatrix<float, 3> A2_I = geninv(A2);
     SquareMatrix<float, 3> A2_I_check(data2_check);
-    TEST((A2_I - A2_I_check).abs().max() < 1e-5);
+    TEST((A2_I - A2_I_check).abs().max() < 1e-3);
+
+    // Null matrix test
+    Matrix<float, 6, 16> A3;
+    Matrix<float, 16, 6> A3_I = geninv(A3);
+    Matrix<float, 16, 6> A3_I_check;
+    TEST((A3_I - A3_I_check).abs().max() < 1e-5);
 
     // Mock-up effectiveness matrix
     const float B_quad_w[6][16] = {
