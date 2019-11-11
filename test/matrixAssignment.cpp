@@ -171,6 +171,23 @@ int main()
     TEST(isEqual(min(m10_upper_bound, m9), m10_upper_bounded_ref));
     TEST(isEqual(constrain(m10, m10_lower_bound, m10_upper_bound), m10_constrained_ref));
 
+    // min, max, constrain with NAN
+    TEST(isEqualF(matrix::typeFunction::min(5.0f,NAN), 5.0f));
+    TEST(isEqualF(matrix::typeFunction::min(NAN,5.0f), 5.0f));
+    TEST(isEqualF(matrix::typeFunction::min(NAN,NAN), NAN));
+    TEST(isEqualF(matrix::typeFunction::max(5.0f,NAN), 5.0f));
+    TEST(isEqualF(matrix::typeFunction::max(NAN,5.0f), 5.0f));
+    TEST(isEqualF(matrix::typeFunction::max(NAN,NAN), NAN));
+    TEST(isEqualF(matrix::typeFunction::constrain(NAN,5.0f,6.0f), NAN));
+    TEST(isEqualF(matrix::typeFunction::constrain(1.0f,5.0f,4.0f), NAN));
+    TEST(isEqualF(matrix::typeFunction::constrain(6.0f,NAN,5.0f), 5.0f));
+    TEST(isEqualF(matrix::typeFunction::constrain(1.0f,5.0f,NAN), 5.0f));
+    Vector2f v1{NAN, 5.0f};
+    Vector2f v1_min = min(v1,1.0f);
+    Matrix3f m11 = min(m10_constrained_ref,NAN);
+    TEST(isEqualF(fmin(NAN,1.0f), float(v1_min(0))));
+    TEST(isEqual(m11, m10_constrained_ref));
+
     // check write_string()
     float comma[6] = {
         1.f, 12345.678f,
