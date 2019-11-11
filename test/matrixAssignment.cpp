@@ -157,22 +157,19 @@ int main()
     float data_m10_lower_bound[9] = {5, 7, 4, 8, 19, 10, 20, 16, 18};
     float data_m10_lower_bounded_ref[9] = {5, 7, 6, 8, 19, 12, 20, 16, 18};
     float data_m10_upper_bound[9] = {6, 4, 8, 18, 20, 11, 30, 16, 18};
-    float data_m10_upper_bound_2[9] = {6, 7, 8, 18, 20, 11, 30, 16, 18};
     float data_m10_upper_bounded_ref[9] = {2, 4, 6, 8, 10, 11, 14, 16, 18};
-    float data_m10_constrained_ref_2[9] = {5, 7, 6, 8, 19, 11, 20, 16, 18};
+    float data_m10_constrained_ref[9] = {5, NAN, 6, 8, 19, 11, 20, 16, 18};
     Matrix3f m10(data_m10);
     Matrix3f m10_lower_bound(data_m10_lower_bound);
     Matrix3f m10_lower_bounded_ref(data_m10_lower_bounded_ref);
     Matrix3f m10_upper_bound(data_m10_upper_bound);
-    Matrix3f m10_upper_bound_2(data_m10_upper_bound_2);
     Matrix3f m10_upper_bounded_ref(data_m10_upper_bounded_ref);
-    Matrix3f m10_constrained_ref_2(data_m10_constrained_ref_2);
+    Matrix3f m10_constrained_ref(data_m10_constrained_ref);
     TEST(isEqual(max(m10, m10_lower_bound), m10_lower_bounded_ref));
     TEST(isEqual(max(m10_lower_bound, m10), m10_lower_bounded_ref));
     TEST(isEqual(min(m10, m10_upper_bound), m10_upper_bounded_ref));
     TEST(isEqual(min(m10_upper_bound, m9), m10_upper_bounded_ref));
-    TEST(isEqual(constrain(m10, m10_lower_bound, m10_upper_bound), m_nan));
-    TEST(isEqual(constrain(m10, m10_lower_bound, m10_upper_bound_2), m10_constrained_ref_2));
+    TEST(isEqual(constrain(m10, m10_lower_bound, m10_upper_bound), m10_constrained_ref));
 
     // check write_string()
     float comma[6] = {

@@ -678,11 +678,10 @@ Matrix<Type, M, N> constrain(const Matrix<Type, M, N> &x,
                              const Matrix<Type, M, N> &x_lower_bound,
                              const Matrix<Type, M, N> &x_upper_bound) {
     Matrix<Type,M,N> m;
-    bool should_be_nan = false;
     for (size_t i = 0; i < M; i++) {
         for (size_t j = 0; j < N; j++) {
             if(x_lower_bound(i,j) > x_upper_bound(i,j)) {
-                should_be_nan = true;
+                m(i,j) = NAN;
             } else {
                 if(x(i,j) < x_lower_bound(i,j)) {
                     m(i,j) = x_lower_bound(i,j);
@@ -693,9 +692,6 @@ Matrix<Type, M, N> constrain(const Matrix<Type, M, N> &x,
                 }
             }
         }
-    }
-    if(should_be_nan) {
-        m.setNaN();
     }
     return m;
 }
