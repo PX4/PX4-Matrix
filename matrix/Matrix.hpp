@@ -93,6 +93,13 @@ public:
      * Accessors/ Assignment etc.
      */
 
+    inline Type * data() {
+        return _data[0];
+    }
+
+    inline const Type * data() const {
+        return _data[0];
+    }
 
     inline Type operator()(size_t i, size_t j) const
     {
