@@ -28,15 +28,30 @@ public:
         _data(const_cast<Matrix<Type, M, N>*>(data)) {
         static_assert(P <= M, "Slice rows bigger than backing matrix");
         static_assert(Q <= N, "Slice cols bigger than backing matrix");
+        assert(x0 >= 0);
+        assert(x0 + P <= M);
+        assert(y0 >= 0);
+        assert(y0 + Q <= N);
     }
 
     Type operator()(size_t i, size_t j) const
     {
+        assert(i >= 0);
+        assert(i < P);
+        assert(j >= 0);
+        assert(j < Q);
+
         return (*_data)(_x0 + i, _y0 + j);
     }
 
     Type &operator()(size_t i, size_t j)
+
     {
+        assert(i >= 0);
+        assert(i < P);
+        assert(j >= 0);
+        assert(j < Q);
+
         return (*_data)(_x0 + i, _y0 + j);
     }
 

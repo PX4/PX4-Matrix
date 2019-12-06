@@ -135,6 +135,10 @@ public:
     template <size_t Width>
     void uncorrelateCovariance(size_t first)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         Vector<Type, Width> diag_elements = self.slice<Width, Width>(first, first).diag();
         self.uncorrelateCovarianceSetVariance(first, diag_elements);
@@ -210,6 +214,10 @@ public:
     template <size_t Width>
     bool isBlockSymmetric(size_t first, const Type eps = 1e-8f)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         if(Width>1) {
             for (size_t row_idx = first+1; row_idx < first+Width; row_idx++) {
@@ -227,6 +235,10 @@ public:
     template <size_t Width>
     bool isRowColSymmetric(size_t first, const Type eps = 1e-8f)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         for (size_t row_idx = first; row_idx < first+Width; row_idx++) {
             for (size_t col_idx = 0; col_idx < first; col_idx++) {
