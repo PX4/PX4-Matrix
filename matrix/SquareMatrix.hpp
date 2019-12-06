@@ -147,10 +147,14 @@ public:
     template <size_t Width>
     void uncorrelateCovarianceSetVariance(size_t first, const Vector<Type, Width> &vec)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         // zero rows and columns
-        self.slice<Width, M>(first, 0) = 0;
-        self.slice<M, Width>(0, first) = 0;
+        self.slice<Width, M>(first, 0) = Type(0);
+        self.slice<M, Width>(0, first) = Type(0);
 
         // set diagonals
         unsigned vec_idx = 0;
@@ -163,10 +167,14 @@ public:
     template <size_t Width>
     void uncorrelateCovarianceSetVariance(size_t first, Type val)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         // zero rows and columns
-        self.slice<Width, M>(first, 0) = 0;
-        self.slice<M, Width>(0, first) = 0;
+        self.slice<Width, M>(first, 0) = Type(0);
+        self.slice<M, Width>(0, first) = Type(0);
 
         // set diagonals
         for (size_t idx = first; idx < first+Width; idx++) {
@@ -178,11 +186,15 @@ public:
     template <size_t Width>
     void makeBlockSymmetric(size_t first)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         if(Width>1) {
             for (size_t row_idx = first+1; row_idx < first+Width; row_idx++) {
                 for (size_t col_idx = first; col_idx < row_idx; col_idx++) {
-                    Type tmp = self(row_idx,col_idx) + (self(col_idx,row_idx) - self(row_idx,col_idx)) / 2;
+                    Type tmp = self(row_idx,col_idx) + (self(col_idx,row_idx) - self(row_idx,col_idx)) / Type(2);
                     self(row_idx,col_idx) = tmp;
                     self(col_idx,row_idx) = tmp;
                 }
@@ -194,11 +206,15 @@ public:
     template <size_t Width>
     void makeRowColSymmetric(size_t first)
     {
+        static_assert(Width <= M, "Width bigger than matrix");
+        assert(first >= 0);
+        assert(first + Width <= M);
+
         SquareMatrix<Type, M> &self = *this;
         self.makeBlockSymmetric<Width>(first);
         for (size_t row_idx = first; row_idx < first+Width; row_idx++) {
             for (size_t col_idx = 0; col_idx < first; col_idx++) {
-                Type tmp = self(row_idx,col_idx) + (self(col_idx,row_idx) - self(row_idx,col_idx)) / 2;
+                Type tmp = self(row_idx,col_idx) + (self(col_idx,row_idx) - self(row_idx,col_idx)) / Type(2);
                 self(row_idx,col_idx) = tmp;
                 self(col_idx,row_idx) = tmp;
             }
