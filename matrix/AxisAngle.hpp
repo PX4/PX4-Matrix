@@ -73,7 +73,7 @@ public:
         if (fabs(mag) >= Type(1e-10)) {
             v = q.imag() * Type(Type(2) * atan2(mag, q(0)) / mag);
         } else {
-            v = q.imag() * Type(Type(2) * float(sign(q(0))));
+            v = q.imag() * Type(Type(2) * Type(sign(q(0))));
         }
     }
 
