@@ -10,6 +10,12 @@ matrix:
   include:
     - os: linux
       dist: bionic
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
       compiler: gcc-9
       env: CMAKE_BUILD_TYPE=Coverage FORMAT=ON
     - os: linux
