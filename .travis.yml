@@ -10,12 +10,6 @@ matrix:
   include:
     - os: linux
       dist: bionic
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - g++-9
       compiler: gcc-9
       env: CMAKE_BUILD_TYPE=Coverage FORMAT=ON
     - os: linux
@@ -34,6 +28,11 @@ addons:
     - g++
     - gcc
     - lcov
+
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -q update
+  - sudo apt-get -y install gcc-9
 
 install:
   - if [ "${CMAKE_BUILD_TYPE}" = "Coverage" ]; then pip install --user cpp-coveralls; fi
