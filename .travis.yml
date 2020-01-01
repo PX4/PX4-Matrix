@@ -10,7 +10,7 @@ matrix:
   include:
     - os: linux
       dist: bionic
-      compiler: gcc-8
+      compiler: gcc-9
       env: CMAKE_BUILD_TYPE=Coverage FORMAT=ON
     - os: linux
       dist: bionic
