@@ -22,6 +22,23 @@ int main()
     SquareMatrix<float, 3> A_I_check(data_check);
     TEST((A_I - A_I_check).abs().max() < 1e-6f);
 
+    float data_2x2[4] = {12, 2,
+                         -7, 5
+                        };
+    float data_2x2_check[4] = {
+        0.0675675675f, -0.02702702f,
+        0.0945945945f, 0.162162162f
+    };
+
+    SquareMatrix<float, 2> A2x2(data_2x2);
+    SquareMatrix<float, 2> A2x2_I = inv(A2x2);
+    SquareMatrix<float, 2> A2x2_I_check(data_2x2_check);
+    TEST(isEqual(A2x2_I, A2x2_I_check));
+
+    SquareMatrix<float, 2> A2x2_sing = ones<float, 2, 2>();
+    SquareMatrix<float, 2> A2x2_sing_I;
+    TEST(inv(A2x2_sing, A2x2_sing_I) == false);
+
     // stess test
     SquareMatrix<float, n_large> A_large;
     A_large.setIdentity();
@@ -34,7 +51,7 @@ int main()
     }
 
     SquareMatrix<float, 3> zero_test = zeros<float, 3, 3>();
-    inv(zero_test);
+    TEST(isEqual(inv(zero_test), zeros<float, 3, 3>()));
 
     // test pivotting
     float data2[81] = {

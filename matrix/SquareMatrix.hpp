@@ -435,6 +435,23 @@ bool inv(const SquareMatrix<Type, M> & A, SquareMatrix<Type, M> & inv)
     return true;
 }
 
+template<typename Type>
+bool inv(const SquareMatrix<Type, 2> & A, SquareMatrix<Type, 2> & inv)
+{
+    Type det = A(0, 0) * A(1, 1) - A(1, 0) * A(0, 1);
+
+    if(fabs(static_cast<float>(det)) < FLT_EPSILON) {
+        return false;
+    }
+
+    inv(0, 0) = A(1, 1);
+    inv(1, 0) = -A(1, 0);
+    inv(0, 1) = -A(0, 1);
+    inv(1, 1) = A(0, 0);
+    inv /= det;
+    return true;
+}
+
 /**
  * inverse based on LU factorization with partial pivotting
  */
