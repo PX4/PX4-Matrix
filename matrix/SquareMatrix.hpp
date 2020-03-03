@@ -440,7 +440,7 @@ bool inv(const SquareMatrix<Type, 2> & A, SquareMatrix<Type, 2> & inv)
 {
     Type det = A(0, 0) * A(1, 1) - A(1, 0) * A(0, 1);
 
-    if(fabs(static_cast<float>(det)) < FLT_EPSILON) {
+    if(fabs(static_cast<float>(det)) < FLT_EPSILON || !is_finite(det)) {
         return false;
     }
 

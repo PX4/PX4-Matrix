@@ -85,6 +85,7 @@ int main()
     SquareMatrix<float, 9> A2_I = inv(A2);
     SquareMatrix<float, 9> A2_I_check(data2_check);
     TEST((A2_I - A2_I_check).abs().max() < 1e-3f);
+
     float data3[9] = {
         0, 1, 2,
         3, 4, 5,
@@ -114,6 +115,16 @@ int main()
     TEST(isEqual(A3_I, Z3));
     TEST(isEqual(A3.I(), Z3));
 
+    for(size_t i = 0; i < 9; i++) {
+        A2(0, i) = 0;
+    }
+    A2_I = inv(A2);
+    SquareMatrix<float, 9> Z9 = zeros<float, 9, 9>();
+    TEST(!A2.I(A2_I));
+    TEST(!Z9.I(A2_I));
+    TEST(isEqual(A2_I, Z9));
+    TEST(isEqual(A2.I(), Z9));
+
     // cover NaN
     A3(0, 0) = NAN;
     A3(0, 1) = 0;
@@ -121,6 +132,11 @@ int main()
     A3_I = inv(A3);
     TEST(isEqual(A3_I, Z3));
     TEST(isEqual(A3.I(), Z3));
+
+    A2(0, 0) = NAN;
+    A2_I = inv(A2);
+    TEST(isEqual(A2_I, Z9));
+    TEST(isEqual(A2.I(), Z9));
 
     float data4[9] = {
         1.33471626f,  0.74946721f, -0.0531679f,
