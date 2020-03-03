@@ -39,6 +39,10 @@ int main()
     SquareMatrix<float, 2> A2x2_sing_I;
     TEST(inv(A2x2_sing, A2x2_sing_I) == false);
 
+    SquareMatrix<float, 3> A3x3_sing = ones<float, 3, 3>();
+    SquareMatrix<float, 3> A3x3_sing_I;
+    TEST(inv(A3x3_sing, A3x3_sing_I) == false)
+
     // stess test
     SquareMatrix<float, n_large> A_large;
     A_large.setIdentity();
