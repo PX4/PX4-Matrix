@@ -615,34 +615,32 @@ template<typename Type>
 Type min(const Type x, const Type y) {
     bool x_is_nan = isnan(x);
     bool y_is_nan = isnan(y);
-    // z > nan for z != nan is required by C the standard
+    // take the non-nan value if there is one
     if (x_is_nan || y_is_nan) {
         if (x_is_nan && !y_is_nan) {
             return y;
         }
-        if (!x_is_nan && y_is_nan) {
-            return x;
-        }
+        // either !x_is_nan && y_is_nan or both are NAN anyways
         return x;
     }
     return (x < y) ? x : y;
 }
+
 template<typename Type>
 Type max(const Type x, const Type y) {
     bool x_is_nan = isnan(x);
     bool y_is_nan = isnan(y);
-    // z > nan for z != nan is required by C the standard
+    // take the non-nan value if there is one
     if (x_is_nan || y_is_nan) {
         if (x_is_nan && !y_is_nan) {
             return y;
         }
-        if (!x_is_nan && y_is_nan) {
-            return x;
-        }
+        // either !x_is_nan && y_is_nan or both are NAN anyways
         return x;
     }
     return (x > y) ? x : y;
 }
+
 template<typename Type>
 Type constrain(const Type x, const Type lower_bound, const Type upper_bound) {
     if (lower_bound > upper_bound) {
