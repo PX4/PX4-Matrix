@@ -22,25 +22,25 @@ class Vector : public Matrix<Type, M, 1>
 public:
     typedef Matrix<Type, M, 1> MatrixM1;
 
-    Vector() = default;
+    FORCEDINLINE Vector() = default;
 
-    Vector(const MatrixM1 & other) :
+    FORCEDINLINE Vector(const MatrixM1 & other) :
         MatrixM1(other)
     {
     }
 
-    explicit Vector(const Type data_[M]) :
+    FORCEDINLINE explicit Vector(const Type data_[M]) :
         MatrixM1(data_)
     {
     }
 
     template<size_t P, size_t Q>
-    Vector(const Slice<Type, M, 1, P, Q>& slice_in) :
+    FORCEDINLINE Vector(const Slice<Type, M, 1, P, Q>& slice_in) :
         Matrix<Type, M, 1>(slice_in)
     {
     }
 
-    inline Type operator()(size_t i) const
+    FORCEDINLINE Type operator()(size_t i) const
     {
         assert(i >= 0);
         assert(i < M);
@@ -49,7 +49,7 @@ public:
         return v(i, 0);
     }
 
-    inline Type &operator()(size_t i)
+    FORCEDINLINE Type &operator()(size_t i)
     {
         assert(i >= 0);
         assert(i < M);
@@ -67,34 +67,34 @@ public:
         return r;
     }
 
-    inline Type operator*(const MatrixM1 & b) const {
+    FORCEDINLINE Type operator*(const MatrixM1 & b) const {
         const Vector &a(*this);
         return a.dot(b);
     }
 
-    inline Vector operator*(Type b) const {
+    FORCEDINLINE Vector operator*(Type b) const {
         return Vector(MatrixM1::operator*(b));
     }
 
-    Type norm() const {
+    FORCEDINLINE Type norm() const {
         const Vector &a(*this);
         return Type(matrix::sqrt(a.dot(a)));
     }
 
-    Type norm_squared() const {
+    FORCEDINLINE Type norm_squared() const {
         const Vector &a(*this);
         return a.dot(a);
     }
 
-    inline Type length() const {
+    FORCEDINLINE Type length() const {
         return norm();
     }
 
-    inline void normalize() {
+    FORCEDINLINE void normalize() {
         (*this) /= norm();
     }
 
-    Vector unit() const {
+    FORCEDINLINE Vector unit() const {
         return (*this) / norm();
     }
 
@@ -106,11 +106,11 @@ public:
         return Vector();
     }
 
-    inline Vector normalized() const {
+    FORCEDINLINE Vector normalized() const {
         return unit();
     }
 
-    bool longerThan(Type testVal) const {
+    FORCEDINLINE bool longerThan(Type testVal) const {
         return norm_squared() > testVal*testVal;
     }
 

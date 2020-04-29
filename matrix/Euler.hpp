@@ -39,14 +39,14 @@ public:
     /**
      * Standard constructor
      */
-    Euler() = default;
+    FORCEDINLINE Euler() = default;
 
     /**
      * Copy constructor
      *
      * @param other vector to copy
      */
-    Euler(const Vector<Type, 3> &other) :
+    FORCEDINLINE Euler(const Vector<Type, 3> &other) :
         Vector<Type, 3>(other)
     {
     }
@@ -56,7 +56,7 @@ public:
      *
      * @param other Matrix31 to copy
      */
-    Euler(const Matrix<Type, 3, 1> &other) :
+    FORCEDINLINE Euler(const Matrix<Type, 3, 1> &other) :
         Vector<Type, 3>(other)
     {
     }
@@ -72,7 +72,7 @@ public:
      * @param theta_ rotation angle about Y axis
      * @param psi_ rotation angle about Z axis
      */
-    Euler(Type phi_, Type theta_, Type psi_) : Vector<Type, 3>()
+    FORCEDINLINE Euler(Type phi_, Type theta_, Type psi_) : Vector<Type, 3>()
     {
         phi() = phi_;
         theta() = theta_;
@@ -120,33 +120,33 @@ public:
      *
      * @param q quaternion
     */
-    Euler(const Quaternion<Type> &q)
+    FORCEDINLINE Euler(const Quaternion<Type> &q)
     {
         *this = Euler(Dcm<Type>(q));
     }
 
-    inline Type phi() const
+    FORCEDINLINE Type phi() const
     {
         return (*this)(0);
     }
-    inline Type theta() const
+    FORCEDINLINE Type theta() const
     {
         return (*this)(1);
     }
-    inline Type psi() const
+    FORCEDINLINE Type psi() const
     {
         return (*this)(2);
     }
 
-    inline Type &phi()
+    FORCEDINLINE Type &phi()
     {
         return (*this)(0);
     }
-    inline Type &theta()
+    FORCEDINLINE Type &theta()
     {
         return (*this)(1);
     }
-    inline Type &psi()
+    FORCEDINLINE Type &psi()
     {
         return (*this)(2);
     }

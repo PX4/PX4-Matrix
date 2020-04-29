@@ -61,7 +61,7 @@ public:
      *
      * @param data_ array
      */
-    explicit Quaternion(const Type data_[4]) :
+    FORCEDINLINE explicit Quaternion(const Type data_[4]) :
         Vector<Type, 4>(data_)
     {
     }
@@ -69,7 +69,7 @@ public:
     /**
      * Standard constructor
      */
-    Quaternion()
+    FORCEDINLINE Quaternion()
     {
         Quaternion &q = *this;
         q(0) = 1;
@@ -83,7 +83,7 @@ public:
      *
      * @param other Matrix41 to copy
      */
-    Quaternion(const Matrix41 &other) :
+    FORCEDINLINE Quaternion(const Matrix41 &other) :
         Vector<Type, 4>(other)
     {
     }
@@ -237,7 +237,7 @@ public:
      * @param c set quaternion value 2
      * @param d set quaternion value 3
      */
-    Quaternion(Type a, Type b, Type c, Type d)
+    FORCEDINLINE Quaternion(Type a, Type b, Type c, Type d)
     {
         Quaternion &q = *this;
         q(0) = a;
@@ -267,7 +267,7 @@ public:
      *
      * @param other quaternion to multiply with
      */
-    void operator*=(const Quaternion &other)
+    FORCEDINLINE void operator*=(const Quaternion &other)
     {
         Quaternion &self = *this;
         self = self * other;
@@ -279,7 +279,7 @@ public:
      * @param scalar scalar to multiply with
      * @return product
      */
-    Quaternion operator*(Type scalar) const
+    FORCEDINLINE Quaternion operator*(Type scalar) const
     {
         const Quaternion &q = *this;
         return scalar * q;
@@ -290,7 +290,7 @@ public:
      *
      * @param scalar scalar to multiply with
      */
-    void operator*=(Type scalar)
+    FORCEDINLINE void operator*=(Type scalar)
     {
         Quaternion &q = *this;
         q = q * scalar;
@@ -381,7 +381,7 @@ public:
      *
      * @param vec rotation vector
      */
-    void rotate(const AxisAngle<Type> &vec)
+    FORCEDINLINE void rotate(const AxisAngle<Type> &vec)
     {
         Quaternion res(vec);
         (*this) = res * (*this);
@@ -499,7 +499,7 @@ public:
     /**
      * Imaginary components of quaternion
      */
-    Vector3<Type> imag() const
+    FORCEDINLINE Vector3<Type> imag() const
     {
         const Quaternion &q = *this;
         return Vector3<Type>(q(1), q(2), q(3));
@@ -512,7 +512,7 @@ public:
      * == last column of the equivalent rotation matrix
      * but calculated more efficiently than a full conversion
      */
-    Vector3<Type> dcm_z() const
+    FORCEDINLINE Vector3<Type> dcm_z() const
     {
         const Quaternion &q = *this;
         Vector3<Type> R_z;

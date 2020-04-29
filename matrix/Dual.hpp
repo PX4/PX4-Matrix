@@ -29,9 +29,9 @@ struct Dual
     Scalar value {};
     Vector<Scalar, N> derivative;
 
-    Dual() = default;
+    FORCEDINLINE Dual() = default;
 
-    explicit Dual(Scalar v, size_t inputDimension = 65535)
+    FORCEDINLINE explicit Dual(Scalar v, size_t inputDimension = 65535)
     {
         value = v;
         if (inputDimension < N) {
@@ -39,11 +39,11 @@ struct Dual
         }
     }
 
-    explicit Dual(Scalar v, const Vector<Scalar, N>& d) :
+    FORCEDINLINE explicit Dual(Scalar v, const Vector<Scalar, N>& d) :
         value(v), derivative(d)
     {}
 
-    Dual<Scalar, N>& operator=(const Scalar& a)
+    FORCEDINLINE Dual<Scalar, N>& operator=(const Scalar& a)
     {
         derivative.setZero();
         value = a;

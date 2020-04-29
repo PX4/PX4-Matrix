@@ -46,7 +46,7 @@ public:
      *
      * Initializes to identity
      */
-    Dcm()
+    FORCEDINLINE Dcm()
     {
         (*this) = eye<Type, 3>();
     }
@@ -56,7 +56,7 @@ public:
      *
      * @param _data pointer to array
      */
-    explicit Dcm(const Type data_[3][3]) : SquareMatrix<Type, 3>(data_)
+    FORCEDINLINE explicit Dcm(const Type data_[3][3]) : SquareMatrix<Type, 3>(data_)
     {
     }
 
@@ -65,7 +65,7 @@ public:
      *
      * @param _data pointer to array
      */
-    explicit Dcm(const Type data_[9]) : SquareMatrix<Type, 3>(data_)
+    FORCEDINLINE explicit Dcm(const Type data_[9]) : SquareMatrix<Type, 3>(data_)
     {
     }
 
@@ -74,7 +74,7 @@ public:
      *
      * @param other Matrix33 to set dcm to
      */
-    Dcm(const Matrix<Type, 3, 3> &other) : SquareMatrix<Type, 3>(other)
+    FORCEDINLINE Dcm(const Matrix<Type, 3, 3> &other) : SquareMatrix<Type, 3>(other)
     {
     }
 

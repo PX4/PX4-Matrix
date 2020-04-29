@@ -34,7 +34,7 @@ public:
         assert(y0 + Q <= N);
     }
 
-    Type operator()(size_t i, size_t j) const
+    FORCEDINLINE Type operator()(size_t i, size_t j) const
     {
         assert(i >= 0);
         assert(i < P);
@@ -44,8 +44,7 @@ public:
         return (*_data)(_x0 + i, _y0 + j);
     }
 
-    Type &operator()(size_t i, size_t j)
-
+    FORCEDINLINE Type &operator()(size_t i, size_t j)
     {
         assert(i >= 0);
         assert(i < P);
@@ -56,7 +55,7 @@ public:
     }
 
     template<size_t MM, size_t NN>
-    Slice<Type, P, Q, M, N>& operator=(const Slice<Type, P, Q, MM, NN>& other)
+    FORCEDINLINE Slice<Type, P, Q, M, N>& operator=(const Slice<Type, P, Q, MM, NN>& other)
     {
         Slice<Type, P, Q, M, N>& self = *this;
         for (size_t i = 0; i < P; i++) {
@@ -67,7 +66,7 @@ public:
         return self;
     }
 
-    Slice<Type, P, Q, M, N>& operator=(const Matrix<Type, P, Q>& other)
+    FORCEDINLINE Slice<Type, P, Q, M, N>& operator=(const Matrix<Type, P, Q>& other)
     {
         Slice<Type, P, Q, M, N>& self = *this;
         for (size_t i = 0; i < P; i++) {
@@ -78,7 +77,7 @@ public:
         return self;
     }
 
-    Slice<Type, P, Q, M, N>& operator=(const Type& other)
+    FORCEDINLINE Slice<Type, P, Q, M, N>& operator=(const Type& other)
     {
         Slice<Type, P, Q, M, N>& self = *this;
         for (size_t i = 0; i < P; i++) {
@@ -91,7 +90,7 @@ public:
 
     // allow assigning vectors to a slice that are in the axis
     template <size_t DUMMY = 1> // make this a template function since it only exists for some instantiations
-    Slice<Type, 1, Q, M, N>& operator=(const Vector<Type, Q>& other)
+    FORCEDINLINE Slice<Type, 1, Q, M, N>& operator=(const Vector<Type, Q>& other)
     {
         Slice<Type, 1, Q, M, N>& self = *this;
         for (size_t j = 0; j < Q; j++) {
@@ -218,7 +217,7 @@ public:
         }
     }
 
-    Vector<Type, P<Q?P:Q> diag() const
+    FORCEDINLINE Vector<Type, P<Q?P:Q> diag() const
     {
         const Slice<Type, P, Q, M, N>& self = *this;
         Vector<Type,P<Q?P:Q> res;

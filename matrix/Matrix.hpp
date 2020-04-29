@@ -18,12 +18,14 @@
 
 #include "math.hpp"
 
-// There is a bug in GCC 4.8, which causes the compiler to segfault due to array {} constructors.
-// Do for-loop constructors just for GCC 4.8
-#ifdef __GNUC__
-#define MATRIX_GCC_4_8_WORKAROUND (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 9))
+#if defined(DEBUG)
+# define FORCEDINLINE
+#elif defined(__GNUG__) || (__clang__)
+# define FORCEDINLINE __attribute__((always_inline))
+#elif defined(__MSVC__)
+# define FORCEDINLINE __forceinline
 #else
-#define MATRIX_GCC_4_8_WORKAROUND 0
+# define FORCEDINLINE inline
 #endif
 
 namespace matrix
@@ -41,45 +43,30 @@ class Slice;
 template<typename Type, size_t M, size_t N>
 class Matrix
 {
-#if MATRIX_GCC_4_8_WORKAROUND
-    Type _data[M][N];
-#else
     Type _data[M][N] {};
-#endif
 
 public:
 
     // Constructors
-#if MATRIX_GCC_4_8_WORKAROUND
-    Matrix()
-    {
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                _data[i][j] = Type{};
-            }
-        }
-    }
-#else
-    Matrix() = default;
-#endif
+    FORCEDINLINE Matrix() = default;
 
-    explicit Matrix(const Type data_[M*N])
+    FORCEDINLINE explicit Matrix(const Type data_[M*N])
     {
         memcpy(_data, data_, sizeof(_data));
     }
 
-    explicit Matrix(const Type data_[M][N])
+    FORCEDINLINE explicit Matrix(const Type data_[M][N])
     {
         memcpy(_data, data_, sizeof(_data));
     }
 
-    Matrix(const Matrix &other)
+    FORCEDINLINE Matrix(const Matrix &other)
     {
         memcpy(_data, other._data, sizeof(_data));
     }
 
     template<size_t P, size_t Q>
-    Matrix(const Slice<Type, M, N, P, Q>& in_slice)
+    FORCEDINLINE Matrix(const Slice<Type, M, N, P, Q>& in_slice)
     {
         Matrix<Type, M, N>& self = *this;
         for (size_t i = 0; i < M; i++) {
@@ -94,7 +81,7 @@ public:
      */
 
 
-    inline Type operator()(size_t i, size_t j) const
+    FORCEDINLINE Type operator()(size_t i, size_t j) const
     {
         assert(i >= 0);
         assert(i < M);
@@ -104,7 +91,7 @@ public:
         return _data[i][j];
     }
 
-    inline Type &operator()(size_t i, size_t j)
+    FORCEDINLINE Type &operator()(size_t i, size_t j)
     {
         assert(i >= 0);
         assert(i < M);
@@ -114,7 +101,7 @@ public:
         return _data[i][j];
     }
 
-    Matrix<Type, M, N> & operator=(const Matrix<Type, M, N> &other)
+    FORCEDINLINE Matrix<Type, M, N> & operator=(const Matrix<Type, M, N> &other)
     {
         if (this != &other) {
             memcpy(_data, other._data, sizeof(_data));
@@ -122,20 +109,9 @@ public:
         return (*this);
     }
 
-    void copyTo(Type dst[M*N]) const
+    FORCEDINLINE void copyTo(Type dst[M*N]) const
     {
         memcpy(dst, _data, sizeof(Type)*M*N);
-    }
-
-    void copyToColumnMajor(Type dst[M*N]) const
-    {
-        const Matrix<Type, M, N> &self = *this;
-
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                dst[i+(j*M)] = self(i, j);
-            }
-        }
     }
 
     /**
@@ -147,7 +123,7 @@ public:
     // required mult pair, but it provides
     // compile time size_t checking
     template<size_t P>
-    Matrix<Type, M, P> operator*(const Matrix<Type, N, P> &other) const
+    FORCEDINLINE Matrix<Type, M, P> operator*(const Matrix<Type, N, P> &other) const
     {
         const Matrix<Type, M, N> &self = *this;
         Matrix<Type, M, P> res;
@@ -164,7 +140,7 @@ public:
         return res;
     }
 
-    Matrix<Type, M, N> emult(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE Matrix<Type, M, N> emult(const Matrix<Type, M, N> &other) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -178,7 +154,7 @@ public:
         return res;
     }
 
-    Matrix<Type, M, N> edivide(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE Matrix<Type, M, N> edivide(const Matrix<Type, M, N> &other) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -192,7 +168,7 @@ public:
         return res;
     }
 
-    Matrix<Type, M, N> operator+(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE Matrix<Type, M, N> operator+(const Matrix<Type, M, N> &other) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -206,7 +182,7 @@ public:
         return res;
     }
 
-    Matrix<Type, M, N> operator-(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE Matrix<Type, M, N> operator-(const Matrix<Type, M, N> &other) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -221,7 +197,7 @@ public:
     }
 
     // unary minus
-    Matrix<Type, M, N> operator-() const
+    FORCEDINLINE Matrix<Type, M, N> operator-() const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -235,20 +211,20 @@ public:
         return res;
     }
 
-    void operator+=(const Matrix<Type, M, N> &other)
+    FORCEDINLINE void operator+=(const Matrix<Type, M, N> &other)
     {
         Matrix<Type, M, N> &self = *this;
         self = self + other;
     }
 
-    void operator-=(const Matrix<Type, M, N> &other)
+    FORCEDINLINE void operator-=(const Matrix<Type, M, N> &other)
     {
         Matrix<Type, M, N> &self = *this;
         self = self - other;
     }
 
     template<size_t P>
-    void operator*=(const Matrix<Type, N, P> &other)
+    FORCEDINLINE void operator*=(const Matrix<Type, N, P> &other)
     {
         Matrix<Type, M, N> &self = *this;
         self = self * other;
@@ -258,7 +234,7 @@ public:
      * Scalar Operations
      */
 
-    Matrix<Type, M, N> operator*(Type scalar) const
+    FORCEDINLINE Matrix<Type, M, N> operator*(Type scalar) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -272,12 +248,12 @@ public:
         return res;
     }
 
-    inline Matrix<Type, M, N> operator/(Type scalar) const
+    FORCEDINLINE Matrix<Type, M, N> operator/(Type scalar) const
     {
         return (*this)*(1/scalar);
     }
 
-    Matrix<Type, M, N> operator+(Type scalar) const
+    FORCEDINLINE Matrix<Type, M, N> operator+(Type scalar) const
     {
         Matrix<Type, M, N> res;
         const Matrix<Type, M, N> &self = *this;
@@ -291,12 +267,12 @@ public:
         return res;
     }
 
-    inline Matrix<Type, M, N> operator-(Type scalar) const
+    FORCEDINLINE Matrix<Type, M, N> operator-(Type scalar) const
     {
         return (*this) + (-1*scalar);
     }
 
-    void operator*=(Type scalar)
+    FORCEDINLINE void operator*=(Type scalar)
     {
         Matrix<Type, M, N> &self = *this;
 
@@ -307,28 +283,28 @@ public:
         }
     }
 
-    void operator/=(Type scalar)
+    FORCEDINLINE void operator/=(Type scalar)
     {
         Matrix<Type, M, N> &self = *this;
         self = self * (Type(1) / scalar);
     }
 
-    inline void operator+=(Type scalar)
+    FORCEDINLINE void operator+=(Type scalar)
     {
         *this = (*this) + scalar;
     }
 
-    inline void operator-=(Type scalar)
+    FORCEDINLINE void operator-=(Type scalar)
     {
         *this = (*this) - scalar;
     }
 
-    bool operator==(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE bool operator==(const Matrix<Type, M, N> &other) const
     {
         return isEqual(*this, other);
     }
 
-    bool operator!=(const Matrix<Type, M, N> &other) const
+    FORCEDINLINE bool operator!=(const Matrix<Type, M, N> &other) const
     {
         const Matrix<Type, M, N> &self = *this;
         return !(self == other);
