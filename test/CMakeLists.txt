@@ -1,3 +1,5 @@
+include(gtest.cmake)
+
 set(tests
     setIdentity
     inverse
