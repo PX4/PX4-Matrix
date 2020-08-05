@@ -4,7 +4,7 @@
 using namespace matrix;
 
 TEST(sparseVectorTest, initialization) {
-    SparseVectorf<4, 6> a;
+    SparseVectorf<24, 4, 6> a;
     EXPECT_EQ(a.non_zeros(), 2);
     EXPECT_EQ(a.index(0), 4);
     EXPECT_EQ(a.index(1), 6);
@@ -14,7 +14,7 @@ TEST(sparseVectorTest, initialization) {
 
 TEST(sparseVectorTest, initializationWithVector) {
     Vector3f vec(1.f, 2.f, 3.f);
-    SparseVectorf<4, 6, 22> a(vec);
+    SparseVectorf<24, 4, 6, 22> a(vec);
     EXPECT_EQ(a.non_zeros(), 3);
     EXPECT_EQ(a.index(0), 4);
     EXPECT_EQ(a.index(1), 6);
