@@ -94,14 +94,14 @@ public:
     }
 
     void setZero() {
-        for (int i = 0; i < N; i++) {
+        for (size_t i = 0; i < N; i++) {
             _data[i] = Type(0);
         }
     }
 
     Type dot(const matrix::Vector<Type, M>& other) const {
         Type accum (0);
-        for (int i = 0; i < N; i++) {
+        for (size_t i = 0; i < N; i++) {
             accum += _data[i] * other(_indices[i]);
         }
         return accum;
@@ -109,17 +109,36 @@ public:
 
     matrix::Vector<Type, M> operator+(const matrix::Vector<Type, M>& other) const {
         matrix::Vector<Type, M> vec = other;
-        for (int i = 0; i < N; i++) {
+        for (size_t i = 0; i < N; i++) {
             vec(_indices[i]) +=  _data[i];
         }
         return vec;
     }
 
     SparseVector& operator+=(Type t) {
-        for (int i = 0; i < N; i++) {
+        for (size_t i = 0; i < N; i++) {
             _data[i] += t;
         }
         return *this;
+    }
+
+    Type norm_squared() const
+    {
+        Type accum(0);
+        for (size_t i = 0; i < N; i++) {
+            accum += _data[i] * _data[i];
+        }
+        return accum;
+    }
+
+    Type norm() const
+    {
+        return matrix::sqrt(norm_squared());
+    }
+
+    bool longerThan(Type testVal) const
+    {
+        return norm_squared() > testVal*testVal;
     }
 };
 
