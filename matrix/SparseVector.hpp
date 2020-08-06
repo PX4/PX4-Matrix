@@ -19,7 +19,7 @@ template<int N> struct force_constexpr_eval {
 
 // Vector that only store nonzero elements,
 // which indices are specified as parameter pack
-template<typename Type, int M, int... Idxs>
+template<typename Type, size_t M, int... Idxs>
 class SparseVector {
 private:
     static constexpr size_t N = sizeof...(Idxs);
@@ -71,7 +71,7 @@ public:
         data.copyTo(_data);
     }
 
-    template <int otherVectorSize>
+    template <size_t otherVectorSize>
     SparseVector& fromDenseVector(const matrix::Vector<Type, otherVectorSize>& data) {
         static_assert(otherVectorSize > findMaxIndex(), "SparseVector index out of bounds");
         for (int i = 0; i < N; i++) {
@@ -123,10 +123,10 @@ public:
     }
 };
 
-template<typename Type, int Q, int M, int ... Idxs>
+template<typename Type, size_t Q, size_t M, int ... Idxs>
 matrix::Vector<Type, Q> operator*(const matrix::Matrix<Type, Q, M>& mat, const matrix::SparseVector<Type, M, Idxs...>& vec) {
     matrix::Vector<Type, Q> res;
-    for (int i = 0; i < Q; i++){
+    for (size_t i = 0; i < Q; i++) {
         Vector<Type, M> row = mat.row(i);
         res(i) = vec.dot(row);
     }
@@ -134,6 +134,7 @@ matrix::Vector<Type, Q> operator*(const matrix::Matrix<Type, Q, M>& mat, const m
 }
 
 template<int M, int ... Idxs>
+template<size_t M, int ... Idxs>
 using SparseVectorf = SparseVector<float, M, Idxs...>;
 
 }
