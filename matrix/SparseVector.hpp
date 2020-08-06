@@ -133,7 +133,9 @@ matrix::Vector<Type, Q> operator*(const matrix::Matrix<Type, Q, M>& mat, const m
     return res;
 }
 
-template<int M, int ... Idxs>
+template<typename Type,size_t M, int... Idxs>
+constexpr int SparseVector<Type, M, Idxs...>::_indices[SparseVector<Type, M, Idxs...>::N];
+
 template<size_t M, int ... Idxs>
 using SparseVectorf = SparseVector<float, M, Idxs...>;
 
