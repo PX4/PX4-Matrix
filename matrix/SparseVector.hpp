@@ -67,16 +67,15 @@ public:
     }
 
     SparseVector() = default;
-    SparseVector(const matrix::Vector<Type, N>& data) {
-        data.copyTo(_data);
-    }
 
-    template <size_t otherVectorSize>
-    SparseVector& fromDenseVector(const matrix::Vector<Type, otherVectorSize>& data) {
-        static_assert(otherVectorSize > findMaxIndex(), "SparseVector index out of bounds");
+    SparseVector(const matrix::Vector<Type, M>& data) {
         for (int i = 0; i < N; i++) {
             _data[i] = data(_indices[i]);
         }
+    }
+
+    explicit SparseVector(const Type data[N]) {
+        memcpy(_data, data, sizeof(_data));
     }
 
     template <int i>
