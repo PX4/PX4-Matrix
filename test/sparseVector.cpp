@@ -31,6 +31,15 @@ TEST(sparseVectorTest, initialisationFromVector) {
     EXPECT_FLOAT_EQ(a.at<2>(), vec(2));
 }
 
+TEST(sparseVectorTest, accessDataWithCompressedIndices) {
+    const Vector3f vec(1.f, 2.f, 3.f);
+    SparseVectorf<3, 0, 2> a(vec);
+    for (size_t i = 0; i < a.non_zeros(); i++) {
+        a.atCompressedIndex(i) = 1.f;
+        EXPECT_FLOAT_EQ(a.atCompressedIndex(i), 1.f);
+    }
+}
+
 TEST(sparseVectorTest, setZero) {
     const float data[3] = {1.f, 2.f, 3.f};
     SparseVectorf<24, 4, 6, 22> a(data);
