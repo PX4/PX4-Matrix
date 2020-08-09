@@ -37,8 +37,8 @@ TEST(sparseVectorTest, accessDataWithCompressedIndices) {
     for (size_t i = 0; i < a.non_zeros(); i++) {
         a.atCompressedIndex(i) = static_cast<float>(i);
     }
-    EXPECT_FLOAT_EQ(a.at<0>(), 0.f);
-    EXPECT_FLOAT_EQ(a.at<2>(), 1.f);
+    EXPECT_FLOAT_EQ(a.at<0>(), a.atCompressedIndex(0));
+    EXPECT_FLOAT_EQ(a.at<2>(), a.atCompressedIndex(1));
 }
 
 TEST(sparseVectorTest, setZero) {
