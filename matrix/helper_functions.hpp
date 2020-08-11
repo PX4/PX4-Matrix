@@ -55,7 +55,7 @@ Type wrap(Type x, Type low, Type high) {
     }
 
     const Type range = high - low;
-    const Type inv_range = Type(1) / range; // should evaluate at compile time, multiplies below at runtime
+    const double inv_range = 1.0 / range; // should evaluate at compile time, multiplies below at runtime
     const Type num_wraps = floor((x - low) * inv_range);
     return x - range * num_wraps;
 }
