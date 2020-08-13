@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include "math.hpp"
 
 #if defined (__PX4_NUTTX) || defined (__PX4_QURT)
@@ -40,14 +41,15 @@ bool isEqualF(const Type x, const Type y, const Type eps = 1e-4f)
 }
 
 /**
- * Wrap value to stay in range [low, high)
+ * Wrap floating point value to stay in range [low, high)
  *
  * @param x input possibly outside of the range
  * @param low lower limit of the allowed range
  * @param high upper limit of the allowed range
  * @return wrapped value inside the range
  */
-template<typename Type>
+template<typename Type,
+         std::enable_if_t<std::is_floating_point<Type>::value, int> = 0>
 Type wrap(Type x, Type low, Type high) {
     // already in range
     if (low <= x && x < high) {
@@ -55,9 +57,29 @@ Type wrap(Type x, Type low, Type high) {
     }
 
     const Type range = high - low;
-    const double inv_range = 1.0 / range; // should evaluate at compile time, multiplies below at runtime
+    const Type inv_range = Type(1) / range; // should evaluate at compile time, multiplies below at runtime
     const Type num_wraps = floor((x - low) * inv_range);
     return x - range * num_wraps;
+}
+
+/**
+ * Wrap integer value to stay in range [low, high)
+ *
+ * @param x input possibly outside of the range
+ * @param low lower limit of the allowed range
+ * @param high upper limit of the allowed range
+ * @return wrapped value inside the range
+ */
+template<typename Type,
+         std::enable_if_t<std::is_integral<Type>::value, int> = 0>
+Type wrap(Type x, Type low, Type high)
+{
+    const Type range = high - low;
+
+    if (x < low)
+        x += range * ((low - x) / range + 1);
+
+    return low + (x - low) % range;
 }
 
 /**
