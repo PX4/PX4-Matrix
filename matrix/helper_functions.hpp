@@ -1,6 +1,5 @@
 #pragma once
 
-#include <type_traits>
 #include "math.hpp"
 
 #if defined (__PX4_NUTTX) || defined (__PX4_QURT)
@@ -40,26 +39,46 @@ bool isEqualF(const Type x, const Type y, const Type eps = 1e-4f)
            || (isinf(x) && isinf(y) && isnan(x - y));
 }
 
+namespace detail
+{
+
+template<typename Floating>
+Floating wrap_floating(Floating x, Floating low, Floating high) {
+    // already in range
+    if (low <= x && x < high) {
+        return x;
+    }
+
+    const auto range = high - low;
+    const auto inv_range = Floating(1) / range; // should evaluate at compile time, multiplies below at runtime
+    const auto num_wraps = floor((x - low) * inv_range);
+    return x - range * num_wraps;
+}
+
+}  // namespace detail
+
 /**
- * Wrap floating point value to stay in range [low, high)
+ * Wrap single precision floating point value to stay in range [low, high)
  *
  * @param x input possibly outside of the range
  * @param low lower limit of the allowed range
  * @param high upper limit of the allowed range
  * @return wrapped value inside the range
  */
-template<typename Type,
-         std::enable_if_t<std::is_floating_point<Type>::value, int> = 0>
-Type wrap(Type x, Type low, Type high) {
-    // already in range
-    if (low <= x && x < high) {
-        return x;
-    }
+float wrap(float x, float low, float high) {
+    return matrix::detail::wrap_floating(x, low, high);
+}
 
-    const Type range = high - low;
-    const Type inv_range = Type(1) / range; // should evaluate at compile time, multiplies below at runtime
-    const Type num_wraps = floor((x - low) * inv_range);
-    return x - range * num_wraps;
+/**
+ * Wrap double precision floating point value to stay in range [low, high)
+ *
+ * @param x input possibly outside of the range
+ * @param low lower limit of the allowed range
+ * @param high upper limit of the allowed range
+ * @return wrapped value inside the range
+ */
+double wrap(double x, double low, double high) {
+    return matrix::detail::wrap_floating(x, low, high);
 }
 
 /**
@@ -70,11 +89,9 @@ Type wrap(Type x, Type low, Type high) {
  * @param high upper limit of the allowed range
  * @return wrapped value inside the range
  */
-template<typename Type,
-         std::enable_if_t<std::is_integral<Type>::value, int> = 0>
-Type wrap(Type x, Type low, Type high)
-{
-    const Type range = high - low;
+template<typename Integer>
+Integer wrap(Integer x, Integer low, Integer high) {
+    const auto range = high - low;
 
     if (x < low)
         x += range * ((low - x) / range + 1);
