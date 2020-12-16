@@ -73,9 +73,6 @@ public:
     {
         Quaternion &q = *this;
         q(0) = 1;
-        q(1) = 0;
-        q(2) = 0;
-        q(3) = 0;
     }
 
     /**
