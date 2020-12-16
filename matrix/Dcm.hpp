@@ -48,7 +48,10 @@ public:
      */
     Dcm()
     {
-        (*this) = eye<Type, 3>();
+        Dcm &dcm = *this;
+        dcm(0, 0) = 1;
+        dcm(1, 1) = 1;
+        dcm(2, 2) = 1;
     }
 
     /**
