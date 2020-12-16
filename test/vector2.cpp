@@ -12,7 +12,7 @@ int main()
     Vector2f b(0, 1);
     TEST(fabs(a % b - 1.0f) < FLT_EPSILON);
 
-    Vector2f c;
+    Vector2f c{};
     TEST(fabs(c(0) - 0) < FLT_EPSILON);
     TEST(fabs(c(1) - 0) < FLT_EPSILON);
 

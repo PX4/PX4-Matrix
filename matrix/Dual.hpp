@@ -27,7 +27,7 @@ struct Dual
     static constexpr size_t WIDTH = N;
 
     Scalar value {};
-    Vector<Scalar, N> derivative;
+    Vector<Scalar, N> derivative{};
 
     Dual() = default;
 

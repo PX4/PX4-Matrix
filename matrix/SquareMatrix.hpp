@@ -307,10 +307,10 @@ SquareMatrix<Type, M> expm(const Matrix<Type, M, M> & A, size_t order=5)
 template<typename Type, size_t M>
 bool inv(const SquareMatrix<Type, M> & A, SquareMatrix<Type, M> & inv)
 {
-    SquareMatrix<Type, M> L;
+    SquareMatrix<Type, M> L{};
     L.setIdentity();
     SquareMatrix<Type, M> U = A;
-    SquareMatrix<Type, M> P;
+    SquareMatrix<Type, M> P{};
     P.setIdentity();
 
     //printf("A:\n"); A.print();
@@ -492,7 +492,7 @@ SquareMatrix<Type, M> inv(const SquareMatrix<Type, M> & A)
 template<typename Type, size_t M>
 SquareMatrix <Type, M> cholesky(const SquareMatrix<Type, M> & A)
 {
-    SquareMatrix<Type, M> L;
+    SquareMatrix<Type, M> L{};
     for (size_t j = 0; j < M; j++) {
         for (size_t i = j; i < M; i++) {
             if (i==j) {

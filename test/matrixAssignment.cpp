@@ -143,7 +143,7 @@ int main()
     Matrix<float, 1, 1> m5 = s;
     TEST(fabs(m5(0,0) - s) < FLT_EPSILON);
 
-    Matrix<float, 2, 2> m6;
+    Matrix<float, 2, 2> m6{};
     m6.setRow(0, Vector2f(1, 2));
     float m7_array[] = {1,2,0,0};
     Matrix<float, 2, 2> m7(m7_array);

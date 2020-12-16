@@ -39,7 +39,7 @@ SquareMatrix<Type, N> fullRankCholesky(const SquareMatrix<Type, N> & A,
     }
     fullRankCholeskyTolerance<Type>(tol);
 
-    Matrix<Type, N, N> L;
+    Matrix<Type, N, N> L{};
 
     size_t r = 0;
     for (size_t k = 0; k < N; k++) {

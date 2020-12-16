@@ -33,7 +33,7 @@ class Slice;
 template<typename Type, size_t M, size_t N>
 class Matrix
 {
-    Type _data[M][N] {};
+    Type _data[M][N];
 
 public:
 

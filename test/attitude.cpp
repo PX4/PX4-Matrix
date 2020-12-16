@@ -34,7 +34,7 @@ int main()
     TEST(isEqual(euler_check, Vector3f(0.1f, 0.2f, 0.3f)));
 
     // euler default ctor
-    Eulerf e;
+    Eulerf e{};
     Eulerf e_zero = zeros<float, 3, 1>();
     TEST(isEqual(e, e_zero));
     TEST(isEqual(e, e));
@@ -373,7 +373,7 @@ int main()
     // axis angle
     AxisAnglef aa_true(Vector3f(1.0f, 2.0f, 3.0f));
     TEST(isEqual(aa_true, Vector3f(1.0f, 2.0f, 3.0f)));
-    AxisAnglef aa_empty;
+    AxisAnglef aa_empty{};
     TEST(isEqual(aa_empty, AxisAnglef(0.0f, 0.0f, 0.0f)));
     float aa_data[] =  {4.0f, 5.0f, 6.0f};
     AxisAnglef aa_data_init(aa_data);

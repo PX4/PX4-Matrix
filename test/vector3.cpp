@@ -37,7 +37,7 @@ int main()
     TEST(isEqual(g5,g2));
     TEST(isEqual(g2,Vector2f(g4.xy())));
 
-    Vector3f h;
+    Vector3f h{};
     TEST(isEqual(h,Vector3f(0,0,0)));
 
     Vector<float, 4> j;
