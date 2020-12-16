@@ -146,8 +146,7 @@ public:
     Matrix<Type, M, P> operator*(const Matrix<Type, N, P> &other) const
     {
         const Matrix<Type, M, N> &self = *this;
-        Matrix<Type, M, P> res;
-        res.setZero();
+        Matrix<Type, M, P> res{};
 
         for (size_t i = 0; i < M; i++) {
             for (size_t k = 0; k < P; k++) {
