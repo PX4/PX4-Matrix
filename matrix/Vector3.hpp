@@ -61,7 +61,7 @@ public:
     {
     }
 
-    Vector3 cross(const Matrix31 & b) const {
+    inline Vector3 cross(const Matrix31 & b) const {
         const Vector3 &a(*this);
         return {a(1)*b(2,0) - a(2)*b(1,0), -a(0)*b(2,0) + a(2)*b(0,0), a(0)*b(1,0) - a(1)*b(0,0)};
     }
@@ -70,29 +70,34 @@ public:
      * Override matrix ops so Vector3 type is returned
      */
 
-    inline Vector3 operator+(Vector3 other) const
+    inline Vector3 operator+(const Vector3& b) const
     {
-        return Matrix31::operator+(other);
+        const Vector3 &a(*this);
+        return Vector3{a(0)+b(0), a(1)+b(1), a(2)+b(2)};
     }
 
-    inline Vector3 operator-(Vector3 other) const
+    inline Vector3 operator-(const Vector3& b) const
     {
-        return Matrix31::operator-(other);
+        const Vector3 &a(*this);
+        return Vector3{a(0)-b(0), a(1)-b(1), a(2)-b(2)};
     }
 
     inline Vector3 operator-() const
     {
-        return Matrix31::operator-();
+        const Vector3 &a(*this);
+        return Vector3{-a(0), -a(1), -a(2)};
     }
 
     inline Vector3 operator*(Type scalar) const
     {
-        return Matrix31::operator*(scalar);
+        const Vector3 &a(*this);
+        return Vector3{a(0)*scalar, a(1)*scalar, a(2)*scalar};
     }
 
-    inline Type operator*(Vector3 b) const
+    inline Type operator*(const Vector3& b) const
     {
-        return Vector<Type, 3>::operator*(b);
+        const Vector3 &a(*this);
+        return a(0)*b(0) + a(1)*b(1) + a(2)*b(2);
     }
 
     inline Vector3 operator%(const Matrix31 & b) const {
@@ -103,7 +108,9 @@ public:
      * Override vector ops so Vector3 type is returned
      */
     inline Vector3 unit() const {
-        return Vector3(Vector<Type, 3>::unit());
+        const Vector3 &a(*this);
+        const Type n = matrix::sqrt(a(0)*a(0) + a(1)*a(1) + a(2)*a(2));
+        return Vector3{a(0)/n, a(1)/n, a(2)/n};
     }
 
     inline Vector3 normalized() const {
