@@ -92,9 +92,9 @@ public:
     Euler(const Dcm<Type> &dcm)
     {
         Type phi_val = Type(atan2(dcm(2, 1), dcm(2, 2)));
-        Type theta_val = Type(asin(-dcm(2, 0)));
+        const Type theta_val = Type(asin(-dcm(2, 0)));
         Type psi_val = Type(atan2(dcm(1, 0), dcm(0, 0)));
-        Type pi = Type(M_PI);
+        const Type pi = Type(M_PI);
 
         if (Type(fabs(theta_val - pi / Type(2))) < Type(1.0e-3)) {
             phi_val = Type(0);
