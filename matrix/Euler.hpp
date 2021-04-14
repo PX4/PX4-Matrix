@@ -93,11 +93,11 @@ public:
     {
         theta() = asin(-dcm(2, 0));
 
-        if ((fabs(theta() - Type(M_PI/2))) < Type(1.0e-3)) {
+        if ((fabs(theta() - Type(M_PI / 2))) < Type(1.0e-3)) {
             phi() = 0;
             psi() = atan2(dcm(1, 2), dcm(0, 2));
 
-        } else if ((fabs(theta() + Type(M_PI/2))) < Type(1.0e-3)) {
+        } else if ((fabs(theta() + Type(M_PI / 2))) < Type(1.0e-3)) {
             phi() = 0;
             psi() = atan2(-dcm(1, 2), -dcm(0, 2));
 
