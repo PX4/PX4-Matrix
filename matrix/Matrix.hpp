@@ -114,12 +114,7 @@ public:
 
     void copyTo(Type dst[M*N]) const
     {
-        const Matrix<Type, M, N> &self = *this;
-        for (size_t i = 0; i < M; i++) {
-            for (size_t j = 0; j < N; j++) {
-                dst[N*i + j] = self(i, j);
-            }
-        }
+        memcpy(dst, _data, sizeof(Type)*M*N);
     }
 
     void copyToColumnMajor(Type dst[M*N]) const
