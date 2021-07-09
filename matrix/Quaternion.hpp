@@ -326,6 +326,36 @@ public:
     }
 
     /**
+     * Computes the quaternion exponential of the 3D vector u
+     * return a quaternion computed as
+     * expq(u)=[cos||u||, sinc||u||*u
+     * sinc(x)=sin(x)/x in the sin cardinal function
+     *
+     * This can be used to update a quaternion from the body rates
+     * rather than using
+     * qk+1=qk+qk.derivative1(wb)*dt
+     * we can use
+     * qk+1=qk*expq(dt*wb/2)
+     * which is a more robust update.
+     * A re-normalization step might necessary with both methods.
+     *
+     * @param w angular rate in frame 2 (typically reference frame)
+     */
+    static Quaternion expq(const Vector<Type, 3> &u)
+    {
+    	const Type tol = Type(1.0e-6);
+        Type u_norm = u.norm();
+        Type sinc;
+        if (u_norm > -tol && u_norm < tol) {
+            sinc = Type(1.0) - u_norm * u_norm / Type(6.0); // this ensure an error smaller than tol^3
+        } else {
+            sinc = Type(sin(u_norm) / u_norm);
+        }
+        Vector<Type, 3> v = sinc * u;
+        return Quaternion<Type> (Type(cos(u_norm)), v(0), v(1), v(2));
+    }
+
+    /**
      * Invert quaternion in place
      */
     void invert()
