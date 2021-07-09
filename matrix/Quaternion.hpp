@@ -339,7 +339,7 @@ public:
      * which is a more robust update.
      * A re-normalization step might necessary with both methods.
      *
-     * @param w angular rate in frame 2 (typically reference frame)
+     * @param u 3D vector u
      */
     static Quaternion expq(const Vector<Type, 3> &u)
     {
