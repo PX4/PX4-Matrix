@@ -89,6 +89,17 @@ int main()
     q = Quatf();
     TEST(isEqual(q, Quatf(1, 0, 0, 0)));
 
+    // quaternion exponential with u=0
+    v = Vector3f();
+    q = Quatf(1.0f, 0.0f, 0.0f, 0.0f);
+    TEST(isEqual(q, Quatf::expq(v)));
+
+    // quaternion exponential with u
+    v = Vector3f(1.0f, -2.0f, 3.0f);
+    q = Quatf(-0.825299062075259f, -0.150921327219964f,
+               0.301842654439929f, -0.452763981659893f);
+    TEST(isEqual(q, Quatf::expq(v)));
+
     // euler to quaternion
     q = Quatf(euler_check);
     TEST(isEqual(q, q_check));
