@@ -327,6 +327,10 @@ public:
 
     /**
      * Computes the quaternion exponential of the 3D vector u
+     * as proposed in
+     * [1] Sveier A, Sjøberg AM, Egeland O. "Applied Runge–Kutta–Munthe-Kaas Integration
+     *     for the Quaternion Kinematics".Journal of Guidance, Control, and Dynamics. 2019 
+     *
      * return a quaternion computed as
      * expq(u)=[cos||u||, sinc||u||*u]
      * sinc(x)=sin(x)/x in the sin cardinal function
