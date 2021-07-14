@@ -328,7 +328,7 @@ public:
     /**
      * Computes the quaternion exponential of the 3D vector u
      * return a quaternion computed as
-     * expq(u)=[cos||u||, sinc||u||*u
+     * expq(u)=[cos||u||, sinc||u||*u]
      * sinc(x)=sin(x)/x in the sin cardinal function
      *
      * This can be used to update a quaternion from the body rates
