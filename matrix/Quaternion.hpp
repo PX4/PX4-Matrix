@@ -326,7 +326,6 @@ public:
     }
 
     /**
-<<<<<<< HEAD
       * Computes the quaternion exponential of the 3D vector u
       * as proposed in
       * [1] Sveier A, Sjøberg AM, Egeland O. "Applied Runge–Kutta–Munthe-Kaas Integration
