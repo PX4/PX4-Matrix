@@ -326,6 +326,7 @@ public:
     }
 
     /**
+<<<<<<< HEAD
       * Computes the quaternion exponential of the 3D vector u
       * as proposed in
       * [1] Sveier A, Sjøberg AM, Egeland O. "Applied Runge–Kutta–Munthe-Kaas Integration
@@ -365,6 +366,8 @@ public:
 	  *
 	  * This can be used to update a quaternion kinematic cleanly 
 	  * with higher order integration methods (like RK4) on the quaternion logarithm u.
+	  *
+	  * @param u 3D vector u
 	  */
 	static Dcm<Type> inv_r_jacobian (const Vector3<Type> u)
 	{
