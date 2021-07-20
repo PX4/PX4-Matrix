@@ -378,7 +378,7 @@ public:
 							   (Type(1.0 / 3.0) + u_norm * u_norm / Type(45.0)) * u_hat * u_hat);
 		} else {
 			return Type(0.5) * ( Dcm<Type>() + u_hat +
-							     (Type(1.0) - u_norm * Type(cos(u_norm) / sin(u_norm)) / (u_norm * u_norm))
+							     (Type(1.0) - u_norm * Type(cos(u_norm) / sin(u_norm))) / (u_norm * u_norm)
 							     * u_hat * u_hat );
 		}
 	}
