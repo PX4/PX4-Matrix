@@ -124,6 +124,15 @@ int main()
     TEST(isEqual(q, Quatf::expq(v)));
     TEST(isEqual(M, Quatf::inv_r_jacobian(v)));
 
+    // quaternion kinematic update
+    q = Quatf();
+    float h=0.001f;    // sampling time [s]
+    Vector3f w_B=Vector3f(0.1f,0.2f,0.3f);     // body rate in body frame
+    Quatf qa=q+0.5f*h*q.derivative1(w_B);
+    qa.normalize();
+    Quatf qb=q*Quatf::expq(0.5f*h*w_B);
+    TEST(isEqual(qa, qb));
+
     // euler to quaternion
     q = Quatf(euler_check);
     TEST(isEqual(q, q_check));
