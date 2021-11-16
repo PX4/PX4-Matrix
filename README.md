@@ -1,4 +1,6 @@
-# matrix [![Build Status](https://travis-ci.org/PX4/Matrix.svg?branch=master)](https://travis-ci.org/PX4/Matrix) [![Coverage Status](https://coveralls.io/repos/PX4/Matrix/badge.svg?branch=master&service=github)](https://coveralls.io/github/PX4/Matrix?branch=master)
+# matrix
+
+ARCHIVED - PX4-Matrix is now maintained within PX4-Autopilot. https://github.com/PX4/PX4-Autopilot/tree/4a3d64f1d76856d22323d1061ac6e560efda0a05/src/lib/matrix
 
 A simple and efficient template based matrix library.
 
